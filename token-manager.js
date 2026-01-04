@@ -1,16 +1,46 @@
-// Token Manager - 用于安全地存储和获取GitHub API令牌
+// GitHub Token Manager - 使用增强加密方案
 
-// 加密后的GitHub API令牌
-const a = 'Z2l0aHViX3BhdF8xMUI0RFdUTVkwcFhGWm9lOWRmMmpiX0RUWnFuOHdrRmpvVkVFbFdrdHRNWlRSY3gxd2tCV2ExeWxGZFFLWkowMzVLUE1XWDNNTlNERmlqRHlK';
+// 加密密钥（可以根据需要修改）
+const ENCRYPTION_KEY = 'moon_portfolio_secure_key_2024';
 
-// 简单的解密函数（Base64解码）
-function getGitHubToken() {
+// 加密后的GitHub令牌（使用异或+Base64加密）
+const encryptedToken = 'ioabhqqSsIKVkrDd2K3rt7K3uKvVtd2Slq3o2/vY3ZyXsefDuaWHrNmiooqzuI6rvYLXiJORjLCH1f6FlJmcpbC6rJmkhKOmiJvou6Sqs7a36r6ssbKH39H6nZ63';
+
+// 自定义解密函数
+function decrypt(encrypted, key) {
     try {
-        // 使用Base64解码加密的令牌
-        const token = atob(a);
-        return token;
+        const decoded = atob(encrypted);
+        let decrypted = '';
+        for (let i = 0; i < decoded.length; i++) {
+            const encodedChar = decoded.charCodeAt(i);
+            const keyChar = key.charCodeAt(i % key.length);
+            decrypted += String.fromCharCode((encodedChar - 128) ^ keyChar);
+        }
+        return decrypted;
     } catch (error) {
-        console.error( error);
-        return null;
+        console.error('解密失败:', error);
+        return '';
     }
 }
+
+// 获取解密后的GitHub令牌
+function getGitHubToken() {
+    return decrypt(encryptedToken, ENCRYPTION_KEY);
+}
+
+// 用于重新加密令牌的工具函数（仅用于开发环境）
+function encryptToken(token, key = ENCRYPTION_KEY) {
+    try {
+        let encrypted = '';
+        for (let i = 0; i < token.length; i++) {
+            const tokenChar = token.charCodeAt(i);
+            const keyChar = key.charCodeAt(i % key.length);
+            encrypted += String.fromCharCode((tokenChar ^ keyChar) + 128);
+        }
+        return btoa(encrypted);
+    } catch (error) {
+        console.error('加密失败:', error);
+        return '';
+    }
+}
+
