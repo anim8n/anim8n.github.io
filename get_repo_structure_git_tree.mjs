@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 
 // GitHub仓库配置
 const repoUrl = 'https://github.com/anim8n/portfolio';
-const token = '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';
+const token = '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';
 
 // 解析仓库URL获取owner和repo名称
 function parseRepoUrl(url) {
