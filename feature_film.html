@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON - Feature Film</title>
+    <style>
+        body {
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            background-color: transparent;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        button {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            font-family: inherit; /* 继承父元素的字体 */
+        }
+        button:hover {
+            opacity: 0.7;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin: 10px 60px 10px;
+            padding: 0;
+            border-bottom: none;
+            height: 60px; /* 高度增加20px */
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+        }
+        
+        .header * {
+            font-family: inherit;
+        }
+        
+        .nav-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-item, .joinus-item {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            color: #fff;
+        }
+        
+        .project-item:hover, .joinus-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-dropdown, .joinus-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 0;
+            padding: 8px 0;
+            min-width: 180px;
+            display: none;
+            box-shadow: none;
+            z-index: 1000;
+        }
+        
+        .project-item:hover .project-dropdown, .joinus-item:hover .joinus-dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 0;
+        }
+        
+        #searchInput {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            font-size: 14px;
+            width: 220px;
+            background-color: transparent;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        
+        #searchBtn {
+            padding: 6px 14px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        #searchBtn:hover {
+            opacity: 0.7;
+        }
+        
+        .error {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 40px 60px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        
+        /* Feature Film页面特有样式 */
+        .feature-film-container {
+            margin: 20px 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo" style="height: 200px; width: auto; margin-left: -60px;">
+            <div class="nav-container">
+                <a href="index.html" class="nav-item">HOME</a>
+                <div class="project-item">
+                    <span>Projects</span>
+                    <div class="project-dropdown">
+                        <a href="feature_film.html" class="dropdown-item">Feature Film</a>
+                        <a href="AD.html" class="dropdown-item">AD</a>
+                    </div>
+                </div>
+                <div class="nav-item">About</div>
+                <div class="joinus-item">
+                    <span>Join us</span>
+                    <div class="joinus-dropdown">
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Send Resume</a>
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Collaborate</a>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Projects Title...">
+                <button id="searchBtn">Search</button>
+            </div> -->
+        </div>
+        
+        <!-- Feature Film页面内容 -->
+        <span id="loading" style="display: none; text-align: center; display: block; margin: 20px;">LOADING...</span>
+        <div id="error" class="error"></div>
+        <div id="worksContainer"></div>
+    </div>
+
+    <script>
+        // 搜索功能
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+        
+        if (searchBtn && searchInput) {
+            searchBtn.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+                }
+            });
+            
+            // 回车键触发搜索
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+        }
+
+        // 使用GitHub Git Trees API获取仓库结构
+        async function fetchRepoStructure(owner, repo, token) {
+            try {
+                // 直接使用默认分支"main"
+                const defaultBranch = 'main';
+
+                // 使用Git Trees API获取完整仓库结构
+                const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`;
+                const treeResponse = await fetch(treeUrl, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!treeResponse.ok) {
+                    const errorText = await treeResponse.text();
+                    throw new Error(`获取仓库结构失败: ${treeResponse.status} ${treeResponse.statusText} - ${errorText}`);
+                }
+
+                const treeData = await treeResponse.json();
+                return treeData;
+            } catch (error) {
+                console.error('获取仓库结构时出错:', error);
+                throw error;
+            }
+        }
+
+        // 获取文本文件内容
+        async function fetchTextFile(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`获取文件失败: ${response.status} ${response.statusText}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('获取文本文件时出错:', error);
+                return '';
+            }
+        }
+
+        // 创建作品列表（一行一个作品）
+        async function createWorksList(works) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                padding: 20px 60px;
+                max-width: 100%;
+                box-sizing: border-box;
+            `;
+
+            for (const work of works) {
+                const workItem = document.createElement('div');
+                workItem.style.cssText = `
+                    display: flex;
+                    gap: 30px;
+                    align-items: flex-start;
+                    transition: transform 0.3s ease;
+                    cursor: pointer;
+                    padding: 20px;
+                    background-color: rgba(255, 255, 255, 0.05);
+                `;
+                workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
+                workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
+
+                // 创建图片容器 - 使用焦点剪裁
+                const imageContainer = document.createElement('div');
+                // 设置用户要求的尺寸949px x 383px
+                imageContainer.style.cssText = `
+                    width: 949px;
+                    height: 383px;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    position: relative;
+                `;
+
+                // 创建图片
+                const image = document.createElement('img');
+                // 焦点剪裁效果 - 使用object-position实现
+                image.style.cssText = `
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center center;
+                    display: block;
+                `;
+
+                if (work.coverUrl) {
+                    // 当图片加载完成后进行焦点剪裁（使用object-position）
+                    image.onload = async () => {
+                        // 图片已经设置了object-fit: cover和object-position: center，实现了焦点剪裁
+                        // 如果需要更复杂的智能剪裁，可以使用smartcrop库（类似AD.html中的实现）
+                    };
+                    
+                    // 设置图片源，触发onload事件
+                    image.src = work.coverUrl;
+                    image.alt = work.title;
+                } else {
+                    // 使用用户上传的img_not_found.png作为占位图
+                    image.src = 'img_not_found.png';
+                    image.alt = '没有找到图片';
+                }
+
+                imageContainer.appendChild(image);
+
+                // 添加点击事件，跳转到作品详情页
+                imageContainer.addEventListener('click', () => {
+                    // 编码文件夹路径作为URL参数
+                    const encodedFolder = encodeURIComponent(work.folder);
+                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                });
+
+                // 创建文本容器（标题和描述）
+                const textContainer = document.createElement('div');
+                textContainer.style.cssText = `
+                    flex: 1;
+                    line-height: 1.6;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 15px;
+                `;
+
+                const title = document.createElement('div');
+                title.textContent = work.title;
+                title.style.cssText = `
+                    font-size: 20px;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                    cursor: pointer;
+                    color: #a6a4ff;
+                `;
+                
+                // 添加点击事件，跳转到作品详情页
+                title.addEventListener('click', () => {
+                    // 编码文件夹路径作为URL参数
+                    const encodedFolder = encodeURIComponent(work.folder);
+                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                });
+
+                const description = document.createElement('div');
+                description.innerHTML = work.description.replace(/\n/g, '<br>');
+                description.style.cssText = `
+                    font-size: 16px;
+                    color: rgba(255, 255, 255, 0.8);
+                `;
+
+                textContainer.appendChild(title);
+                textContainer.appendChild(description);
+
+                // 将所有元素添加到作品项中
+                workItem.appendChild(imageContainer);
+                workItem.appendChild(textContainer);
+
+                // 添加到容器中
+                container.appendChild(workItem);
+            }
+
+            return container;
+        }
+
+        // 在页面加载时自动获取仓库结构
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const loadingElement = document.getElementById('loading');
+                const errorElement = document.getElementById('error');
+                const worksContainer = document.getElementById('worksContainer');
+                
+                // 显示加载状态
+                loadingElement.style.display = 'block';
+                errorElement.textContent = '';
+                
+                // GitHub API相关信息
+                const owner = 'anim8n';
+                const repo = 'portfolio';
+                const token = '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';
+                
+                // 获取仓库结构
+                const repoData = await fetchRepoStructure(owner, repo, token);
+                
+                // 提取Feature Film文件夹下的所有子文件夹
+                const featureFilmFolder = repoData.tree.find(item => item.path === 'feature film' && item.type === 'tree');
+                if (!featureFilmFolder) {
+                    throw new Error('未找到feature film文件夹');
+                }
+                
+                // 提取所有作品子文件夹
+                const featureFilmSubfolders = repoData.tree
+                    .filter(item => item.path.startsWith('feature film/') && item.path.split('/').length === 2 && item.type === 'tree')
+                    .map(item => item.path);
+                
+                console.log('找到的作品子文件夹:', featureFilmSubfolders);
+                
+                // 获取每个作品的信息
+                const works = [];
+                for (const folder of featureFilmSubfolders) {
+                    const work = {
+                        folder: folder,
+                        title: '',
+                        description: '',
+                        coverUrl: null
+                    };
+                    
+                    // 查找title.txt
+                    const titleFile = repoData.tree.find(item => item.path === `${folder}/title.txt` && item.type === 'blob');
+                    if (titleFile) {
+                        const titleUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${folder}/title.txt`;
+                        work.title = await fetchTextFile(titleUrl);
+                    }
+                    
+                    // 查找description.txt
+                    const descFile = repoData.tree.find(item => item.path === `${folder}/description.txt` && item.type === 'blob');
+                    if (descFile) {
+                        const descUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${folder}/description.txt`;
+                        work.description = await fetchTextFile(descUrl);
+                    }
+                    
+                    // 查找首图（.png或.jpg）- 仅查找根目录下的图片
+                    const rootImageFiles = repoData.tree.filter(item => 
+                        item.path.startsWith(`${folder}/`) && 
+                        item.type === 'blob' && 
+                        (item.path.endsWith('.jpg') || item.path.endsWith('.jpeg') || item.path.endsWith('.png')) &&
+                        !item.path.includes('/imgs/') // 排除imgs子文件夹
+                    );
+                    
+                    console.log(`文件夹 ${folder} 根目录中的图片文件:`, rootImageFiles);
+                    
+                    if (rootImageFiles.length > 0) {
+                        work.coverUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${rootImageFiles[0].path}`;
+                        console.log(`为作品 ${folder} 设置图片URL:`, work.coverUrl);
+                    } else {
+                        // 如果没有找到图片，使用默认图片
+                        work.coverUrl = 'img_not_found.png';
+                        console.log(`文件夹 ${folder} 没有找到根目录图片，使用默认图片`);
+                    }
+                    
+                    works.push(work);
+                }
+                
+                console.log('最终作品列表:', works);
+                
+                // 创建并显示作品列表
+                const worksList = await createWorksList(works);
+                worksContainer.appendChild(worksList);
+                
+            } catch (error) {
+                console.error('获取作品列表时出错:', error);
+                const errorElement = document.getElementById('error');
+                errorElement.textContent = `加载作品列表失败: ${error.message}`;
+            } finally {
+                // 隐藏加载状态
+                const loadingElement = document.getElementById('loading');
+                loadingElement.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

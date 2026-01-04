@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON - AD</title>
+    <!-- 引入SmartCrop.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/smartcrop@2.0.5/smartcrop.min.js"></script>
+    <style>
+        body {
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            background-color: transparent;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        
+        button {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            font-family: inherit; /* 继承父元素的字体 */
+        }
+        
+        button:hover {
+            opacity: 0.7;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            margin: 10px 60px 10px;
+            padding: 0;
+            border-bottom: none;
+            height: 60px; /* 高度增加20px */
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+        }
+        
+        .header * {
+            font-family: inherit;
+        }
+        
+        .nav-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-item, .joinus-item {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            color: #fff;
+        }
+        
+        .project-item:hover, .joinus-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-dropdown, .joinus-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 0;
+            padding: 8px 0;
+            min-width: 180px;
+            display: none;
+            box-shadow: none;
+            z-index: 1000;
+        }
+        
+        .project-item:hover .project-dropdown, .joinus-item:hover .joinus-dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 0;
+        }
+        
+        #searchInput {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            font-size: 14px;
+            width: 220px;
+            background-color: transparent;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        
+        #searchBtn {
+            padding: 6px 14px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        #searchBtn:hover {
+            opacity: 0.7;
+        }
+        
+        .loading {
+            display: inline-block;
+            margin: 40px 60px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .error {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 40px 60px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo" style="height: 200px; width: auto; margin-left: -60px;">
+            <div class="nav-container">
+                <a href="index.html" class="nav-item">HOME</a>
+                <div class="project-item">
+                    <span>Projects</span>
+                    <div class="project-dropdown">
+                        <a href="feature_film.html" class="dropdown-item">Feature Film</a>
+                        <a href="AD.html" class="dropdown-item">AD</a>
+                    </div>
+                </div>
+                <div class="nav-item">About</div>
+                <div class="joinus-item">
+                    <span>Join us</span>
+                    <div class="joinus-dropdown">
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Send Resume</a>
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Collaborate</a>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Projects Title...">
+                <button id="searchBtn">Search</button>
+            </div> -->
+        </div>
+        <span id="loading" class="loading" style="display: none;">LOADING...</span>
+        <div id="error" class="error"></div>
+        <!-- 封面图占位符 -->
+        <div id="coverImageContainer" style="display: flex; justify-content: center; margin: 20px 0;">
+            <img id="coverImage" src="" alt="AD封面" style="width: 90%; max-width: 100%; display: none;">
+        </div>
+        <!-- AD内容将在这里添加 -->
+    </div>
+
+    <script>
+        // 搜索功能
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+        
+        if (searchBtn && searchInput) {
+            searchBtn.addEventListener('click', () => {
+                const searchTerm = searchInput.value.trim();
+                if (searchTerm) {
+                    window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+                }
+            });
+            
+            // 回车键触发搜索
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+        }
+
+        // 使用GitHub Git Trees API获取仓库结构
+        async function fetchRepoStructure(owner, repo, token) {
+            try {
+                // 直接使用默认分支"main"
+                const defaultBranch = 'main';
+
+                // 使用Git Trees API获取完整仓库结构
+                const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`;
+                const treeResponse = await fetch(treeUrl, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!treeResponse.ok) {
+                    const errorText = await treeResponse.text();
+                    throw new Error(`获取仓库结构失败: ${treeResponse.status} ${treeResponse.statusText} - ${errorText}`);
+                }
+
+                const treeData = await treeResponse.json();
+                return treeData;
+            } catch (error) {
+                console.error('获取仓库结构时出错:', error);
+                throw error;
+            }
+        }
+
+        // 获取文本文件内容
+        async function fetchTextFile(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`获取文件失败: ${response.status} ${response.statusText}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('获取文本文件时出错:', error);
+                return '';
+            }
+        }
+
+        // 创建作品矩阵
+        async function createWorksMatrix(works) {
+            const container = document.createElement('div');
+            container.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 30px;
+                padding: 20px 60px;
+                max-width: 100%;
+                box-sizing: border-box;
+            `;
+
+            for (const work of works) {
+                const workItem = document.createElement('div');
+                workItem.style.cssText = `
+                    text-align: center;
+                    transition: transform 0.3s ease;
+                    cursor: pointer;
+                `;
+                workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
+                workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
+
+                // 创建图片容器
+                const imageContainer = document.createElement('div');
+                // 设置图片容器宽高为用户要求的417px x 240px
+                imageContainer.style.cssText = `
+                    width: 417px;
+                    height: 240px;
+                    background-color: rgba(255, 255, 255, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow: hidden;
+                    margin-bottom: 15px;
+                    position: relative;
+                    margin-left: auto;
+                    margin-right: auto;
+                `;
+
+                // 创建图片元素
+                const image = document.createElement('img');
+                image.style.cssText = `
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: cover;
+                `;
+
+                if (work.coverCompressUrl) {
+                    // 设置图片懒加载，初始只设置data-src
+                    image.dataset.src = work.coverCompressUrl;
+                    image.alt = work.title;
+                    
+                    // 图片加载完成后进行smartcrop裁剪
+                    image.onload = async () => {
+                        // 创建临时canvas用于裁剪
+                        const canvas = document.createElement('canvas');
+                        canvas.style.display = 'none';
+                        document.body.appendChild(canvas);
+                        
+                        try {
+                            // 使用smartcrop分析图片找出最佳裁剪区域
+                            const result = await SmartCrop.crop(image, {
+                                width: 417,
+                                height: 240
+                            });
+                            
+                            // 设置canvas尺寸
+                            canvas.width = 417;
+                            canvas.height = 240;
+                            
+                            // 获取canvas上下文
+                            const ctx = canvas.getContext('2d');
+                            
+                            // 绘制裁剪后的图片
+                            const crop = result.topCrop;
+                            ctx.drawImage(
+                                image,
+                                crop.x, crop.y, crop.width, crop.height,
+                                0, 0, 417, 240
+                            );
+                            
+                            // 将canvas转换为Data URL作为图片源
+                            image.src = canvas.toDataURL('image/jpeg');
+                            image.style.opacity = '1';
+                        } catch (error) {
+                            console.error('图片裁剪出错:', error);
+                            // 如果裁剪失败，保持原始图片并显示
+                            image.style.opacity = '1';
+                        } finally {
+                            // 裁剪完成后移除canvas
+                            document.body.removeChild(canvas);
+                        }
+                    };
+                    
+                    // 图片加载失败时使用占位图
+                    image.onerror = () => {
+                        image.src = 'img_not_found.png';
+                        image.style.opacity = '1';
+                    };
+                    
+                    // 默认隐藏，加载完成后显示
+                    image.style.opacity = '0';
+                    image.style.transition = 'opacity 0.3s ease';
+                } else {
+                    // 使用用户上传的img_not_found.png作为占位图
+                    image.src = 'img_not_found.png';
+                    image.alt = '没有找到图片';
+                }
+
+                imageContainer.appendChild(image);
+
+                // 创建标题和描述
+                const textContainer = document.createElement('div');
+                textContainer.style.cssText = `
+                    text-align: center;
+                    line-height: 1.5;
+                `;
+
+                const title = document.createElement('div');
+                title.textContent = work.title;
+                title.style.cssText = `
+                    font-size: 16px;
+                    font-weight: bold;
+                    margin-bottom: 8px;
+                    color: #a6a4ff;
+                `;
+
+                const description = document.createElement('div');
+                description.innerHTML = work.description.replace(/\n/g, '<br>');
+                description.style.cssText = `
+                    font-size: 14px;
+                    color: rgba(255, 255, 255, 0.8);
+                `;
+
+                textContainer.appendChild(title);
+                textContainer.appendChild(description);
+
+                // 将所有元素添加到作品项中
+                workItem.appendChild(imageContainer);
+                workItem.appendChild(textContainer);
+
+                // 添加到容器中
+                container.appendChild(workItem);
+            }
+
+            // 实现图片懒加载
+            const lazyImages = container.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const image = entry.target;
+                        image.src = image.dataset.src;
+                        image.removeAttribute('data-src');
+                        imageObserver.unobserve(image);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px', // 提前50px开始加载
+                threshold: 0.1
+            });
+
+            lazyImages.forEach(image => {
+                imageObserver.observe(image);
+            });
+
+            return container;
+        }
+
+        // 示例用法
+        // 在页面加载时自动获取仓库结构
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const loadingElement = document.getElementById('loading');
+                const errorElement = document.getElementById('error');
+                const coverImage = document.getElementById('coverImage');
+                
+                // 显示加载状态
+                loadingElement.style.display = 'block';
+                errorElement.textContent = '';
+                
+                // GitHub API相关信息
+                const owner = 'anim8n';
+                const repo = 'portfolio';
+                const token = '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';
+                
+                // 获取仓库结构 - 带缓存机制
+                const CACHE_KEY = 'ad_repo_data';
+                const CACHE_EXPIRY = 60 * 60 * 1000; // 1小时过期
+                
+                let repoData;
+                const cachedData = localStorage.getItem(CACHE_KEY);
+                
+                if (cachedData) {
+                    const { data, timestamp } = JSON.parse(cachedData);
+                    if (Date.now() - timestamp < CACHE_EXPIRY) {
+                        console.log('使用缓存的仓库结构数据');
+                        repoData = data;
+                    }
+                }
+                
+                if (!repoData) {
+                    console.log('从GitHub API获取仓库结构数据');
+                    repoData = await fetchRepoStructure(owner, repo, token);
+                    // 缓存数据
+                    localStorage.setItem(CACHE_KEY, JSON.stringify({
+                        data: repoData,
+                        timestamp: Date.now()
+                    }));
+                }
+                
+                // 提取AD文件夹下的所有子文件夹
+                const adFolder = repoData.tree.find(item => item.path === 'AD' && item.type === 'tree');
+                if (!adFolder) {
+                    throw new Error('未找到AD文件夹');
+                }
+                
+                // 提取所有作品子文件夹
+                const adSubfolders = repoData.tree
+                    .filter(item => item.path.startsWith('AD/') && item.path.split('/').length === 2 && item.type === 'tree')
+                    .map(item => item.path);
+                
+                console.log('找到的作品子文件夹:', adSubfolders);
+                
+                // 获取每个作品的信息
+                const works = await Promise.all(adSubfolders.map(async (folder) => {
+                    const work = {
+                        folder: folder,
+                        title: '',
+                        description: '',
+                        coverCompressUrl: null
+                    };
+                    
+                    // 查找title.txt
+                    const titleFile = repoData.tree.find(item => item.path === `${folder}/title.txt` && item.type === 'blob');
+                    if (titleFile) {
+                        const titleUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${folder}/title.txt`;
+                        work.title = await fetchTextFile(titleUrl);
+                    }
+                    
+                    // 查找description.txt
+                    const descFile = repoData.tree.find(item => item.path === `${folder}/description.txt` && item.type === 'blob');
+                    if (descFile) {
+                        const descUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${folder}/description.txt`;
+                        work.description = await fetchTextFile(descUrl);
+                    }
+                    
+                    // 查找所有图片文件
+                    const imageFiles = repoData.tree.filter(item => 
+                        item.path.startsWith(`${folder}/`) && 
+                        item.type === 'blob' && 
+                        (item.path.endsWith('.jpg') || item.path.endsWith('.jpeg') || item.path.endsWith('.png') || item.path.endsWith('.jfif'))
+                    );
+                    
+                    console.log(`文件夹 ${folder} 中的图片文件:`, imageFiles);
+                    
+                    // 优先选择封面_compress图片
+                    let coverImage = imageFiles.find(item => 
+                        item.path.includes('封面_compress.jpg') || 
+                        item.path.includes('封面_compress.png')
+                    );
+                    
+                    // 如果没有封面_compress图片，选择封面图片
+                    if (!coverImage) {
+                        coverImage = imageFiles.find(item => 
+                            item.path.includes('封面.jpg') || 
+                            item.path.includes('封面.png')
+                        );
+                    }
+                    
+                    // 设置图片URL（只使用指定的封面图片，不使用其他图片）
+                    if (coverImage) {
+                        work.coverCompressUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${coverImage.path}`;
+                        console.log(`为作品 ${folder} 设置图片URL:`, work.coverCompressUrl);
+                    }
+                    
+                    return work;
+                }));
+                
+                console.log('最终作品列表:', works);
+                
+                // 直接使用raw.githubusercontent.com URL获取封面图
+                const coverImageUrl = `https://raw.githubusercontent.com/anim8n/portfolio/main/AD/封面.png`;
+                
+                // 获取封面图
+                const coverResponse = await fetch(coverImageUrl);
+                
+                if (coverResponse.ok) {
+                    // 将图片转换为Data URL并显示
+                    const blob = await coverResponse.blob();
+                    const imageUrl = URL.createObjectURL(blob);
+                    coverImage.src = imageUrl;
+                    coverImage.style.display = 'block';
+                } else {
+                    errorElement.textContent = `获取封面图失败: ${coverResponse.status} ${coverResponse.statusText}`;
+                }
+                
+                // 创建作品矩阵
+                const worksMatrix = await createWorksMatrix(works);
+                document.querySelector('.container').appendChild(worksMatrix);
+            } catch (error) {
+                console.error('获取数据时出错:', error);
+                document.getElementById('error').textContent = `获取数据失败: ${error.message}`;
+            } finally {
+                // 隐藏加载状态
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

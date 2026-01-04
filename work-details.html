@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON</title>
+    <style>
+        body {
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            background-color: transparent;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        button {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            font-family: inherit; /* 继承父元素的字体 */
+        }
+        button:hover {
+            opacity: 0.7;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin: 10px 60px 10px;
+            padding: 0;
+            border-bottom: none;
+            height: 60px; /* 高度增加20px */
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+        }
+        
+        .header * {
+            font-family: inherit;
+        }
+        
+        .nav-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-item, .joinus-item {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            color: #fff;
+        }
+        
+        .project-item:hover, .joinus-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-dropdown, .joinus-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 0;
+            padding: 8px 0;
+            min-width: 180px;
+            display: none;
+            box-shadow: none;
+            z-index: 1000;
+        }
+        
+        .project-item:hover .project-dropdown, .joinus-item:hover .joinus-dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 0;
+        }
+        
+        #searchInput {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            font-size: 14px;
+            width: 220px;
+            background-color: transparent;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        
+        #searchBtn {
+            padding: 6px 14px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        #searchBtn:hover {
+            opacity: 0.7;
+        }
+        
+
+        .error {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 40px 60px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* 首图样式 */
+        #main-image-container {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #main-image {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* 作品信息样式 */
+        #work-info {
+            padding: 40px 60px;
+        }
+
+        #work-title {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            color: #a6a4ff;
+        }
+
+        #work-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        /* Animatic展示区域样式 */
+        #animatic-section,
+        #characters-section,
+        #layout-section,
+        #colorkey-section {
+            padding: 40px 0;
+        }
+
+        #animatic-title,
+        #characters-title,
+        #layout-title,
+        #colorkey-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            padding: 0 60px;
+            color: #a6a4ff;
+        }
+
+        #animatic-container,
+        #characters-container,
+        #layout-container,
+        #colorkey-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        #animatic-scroll,
+        #characters-scroll,
+        #layout-scroll,
+        #colorkey-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        #animatic-scroll::-webkit-scrollbar,
+        #characters-scroll::-webkit-scrollbar,
+        #layout-scroll::-webkit-scrollbar,
+        #colorkey-scroll::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .animatic-image {
+            flex: 0 0 auto;
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .animatic-image:hover {
+            transform: scale(1.05);
+        }
+
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+        .scroll-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        #prev-arrow,
+        #animatic-prev-arrow,
+        #characters-prev-arrow,
+        #layout-prev-arrow,
+        #colorkey-prev-arrow {
+            left: 0;
+        }
+
+        #next-arrow,
+        #animatic-next-arrow,
+        #characters-next-arrow,
+        #layout-next-arrow,
+        #colorkey-next-arrow {
+            right: 0;
+        }
+
+        /* 确保Layout区域的图片大小与Animatic区域一致 */
+        #layout-scroll img {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Color Script展示区域样式 */
+        #color-script-section {
+            padding: 40px 0;
+        }
+
+        #color-script-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            padding: 0 60px;
+            color: #a6a4ff;
+        }
+
+        #color-script-container {
+            width: 100%;
+            padding: 0 60px;
+            box-sizing: border-box;
+        }
+
+        #color-script-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .color-script-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .color-script-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* 悬浮大图样式 */
+        #image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 5% auto;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo" style="height: 200px; width: auto; margin-left: -60px;">
+            <div class="nav-container">
+                <a href="index.html" class="nav-item">HOME</a>
+                <div class="project-item">
+                    <span>Projects</span>
+                    <div class="project-dropdown">
+                        <a href="feature_film.html" class="dropdown-item">Feature Film</a>
+                        <a href="AD.html" class="dropdown-item">AD</a>
+                    </div>
+                </div>
+                <div class="nav-item">About</div>
+                <div class="joinus-item">
+                    <span>Join us</span>
+                    <div class="joinus-dropdown">
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Send Resume</a>
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Collaborate</a>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Projects Title...">
+                <button id="searchBtn">Search</button>
+            </div> -->
+        </div>
+
+        <!-- 首图显示区域 -->
+        <div id="main-image-container">
+            <img id="main-image" >
+        </div>
+
+        <!-- 作品信息显示区域 -->
+        <div id="work-info">
+            <h2 id="work-title"></h2>
+            <p id="work-description"></p>
+        </div>
+
+        <!-- Animatic展示区域 -->
+        <div id="animatic-section" style="display: none;">
+            <h3 id="animatic-title">Animatic</h3>
+            <div id="animatic-container">
+                <button id="animatic-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="animatic-scroll"></div>
+                <button id="animatic-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+        
+        <!-- Characters展示区域 -->
+        <div id="characters-section" style="display: none;">
+            <h3 id="characters-title">Characters</h3>
+            <div id="characters-container">
+                <button id="characters-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="characters-scroll"></div>
+                <button id="characters-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+
+        <!-- Color Script展示区域 -->
+        <div id="color-script-section" style="display: none;">
+            <h3 id="color-script-title">Color Script</h3>
+            <div id="color-script-container">
+                <div id="color-script-grid"></div>
+            </div>
+        </div>
+        
+        <!-- Layout展示区域 -->
+        <div id="layout-section" style="display: none;">
+            <h3 id="layout-title">Layout</h3>
+            <div id="layout-container">
+                <button id="layout-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="layout-scroll"></div>
+                <button id="layout-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+        
+        <!-- Colorkey展示区域 -->
+        <div id="colorkey-section" style="display: none;">
+            <h3 id="colorkey-title">Colorkey</h3>
+            <div id="colorkey-container">
+                <button id="colorkey-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="colorkey-scroll"></div>
+                <button id="colorkey-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 悬浮大图容器 -->
+    <div id="image-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img class="modal-image" src="">
+        </div>
+    </div>
+
+    <script>
+        // GitHub API配置
+        const owner = 'anim8n';
+        const repo = 'portfolio';
+        const token = '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';
+
+        // 获取仓库结构
+        async function fetchRepoStructure(owner, repo, token) {
+            try {
+                // 直接使用默认分支"main"
+                const defaultBranch = 'main';
+
+                // 使用Git Trees API获取完整仓库结构
+                const treeUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${defaultBranch}?recursive=1`;
+                const treeResponse = await fetch(treeUrl, {
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!treeResponse.ok) {
+                    const errorText = await treeResponse.text();
+                    throw new Error(`获取仓库结构失败: ${treeResponse.status} ${treeResponse.statusText} - ${errorText}`);
+                }
+
+                const treeData = await treeResponse.json();
+                return treeData;
+            } catch (error) {
+                console.error('获取仓库结构时出错:', error);
+                throw error;
+            }
+        }
+
+        // 获取文本文件内容
+        async function fetchTextFile(url) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`获取文件失败: ${response.status} ${response.statusText}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error('获取文本文件时出错:', error);
+                return '';
+            }
+        }
+
+        // 获取URL参数
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            
+            for (const [key, value] of urlParams.entries()) {
+                params[key] = decodeURIComponent(value);
+            }
+            
+            return params;
+        }
+
+        // 加载作品详情
+        async function loadWorkDetails() {
+            const params = getUrlParams();
+            const folder = params.folder || 'feature film/ONE WORLD'; // 默认值
+            
+            try {
+                // 获取仓库结构
+                const treeData = await fetchRepoStructure(owner, repo, token);
+                const entries = treeData.tree;
+                
+                // 过滤出当前作品文件夹下的所有文件
+                const workFiles = entries.filter(entry => 
+                    entry.path.startsWith(folder + '/') && entry.type === 'blob'
+                );
+                
+                // 获取标题文件
+                const titleFile = workFiles.find(file => file.path === folder + '/title.txt');
+                let title = folder.split('/').pop(); // 默认使用文件夹名作为标题
+                if (titleFile) {
+                    const titleUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${titleFile.path}`;
+                    title = await fetchTextFile(titleUrl);
+                    title = title.trim();
+                }
+                
+                // 获取描述文件
+                const descFile = workFiles.find(file => file.path === folder + '/description.txt');
+                let description = '暂无描述';
+                if (descFile) {
+                    const descUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${descFile.path}`;
+                    description = await fetchTextFile(descUrl);
+                    description = description.trim();
+                }
+                
+                // 获取首图文件 - 仅查找根目录下的图片
+                const rootImageFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    !file.path.includes('/imgs/') // 排除imgs子文件夹
+                );
+                
+                let imageUrl = 'img_not_found.png'; // 默认图片
+                if (rootImageFiles.length > 0) {
+                    imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${rootImageFiles[0].path}`;
+                }
+                
+                // 显示作品信息
+                document.getElementById('work-title').textContent = title;
+                document.getElementById('work-description').textContent = description;
+                
+                // 设置首图
+                const mainImage = document.getElementById('main-image');
+                // 使用data-src实现懒加载
+                mainImage.setAttribute('data-src', imageUrl);
+                
+                // 添加加载完成和错误处理
+                mainImage.onload = function() {
+                    this.style.opacity = '1';
+                };
+                mainImage.onerror = function() {
+                    this.src = 'img_not_found.png';
+                    this.style.opacity = '1';
+                };
+                
+                // 初始化Intersection Observer用于懒加载和区域并行加载
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const element = entry.target;
+                            
+                            // 如果是图片元素，直接加载
+                            if (element.tagName === 'IMG') {
+                                const img = element;
+                                const src = img.getAttribute('data-src');
+                                if (src) {
+                                    img.src = src;
+                                    img.style.opacity = '0';
+                                    img.style.transition = 'opacity 0.3s ease-in-out';
+                                    observer.unobserve(img);
+                                }
+                            } 
+                            // 如果是图片容器或区域，并行加载该区域内的所有图片
+                            else {
+                                const images = element.querySelectorAll('img[data-src]');
+                                images.forEach(img => {
+                                    const src = img.getAttribute('data-src');
+                                    if (src) {
+                                        img.src = src;
+                                        img.style.opacity = '0';
+                                        img.style.transition = 'opacity 0.3s ease-in-out';
+                                        observer.unobserve(img);
+                                    }
+                                });
+                                observer.unobserve(element);
+                            }
+                        }
+                    });
+                }, {
+                    rootMargin: '100px 0px', // 提前100px开始加载
+                    threshold: 0.1
+                });
+                
+                // 观察首图
+                observer.observe(mainImage);
+                
+                // 获取并显示Animatic图片
+                const animaticFiles = workFiles.filter(file => 
+                    file.path.includes('/imgs/animatic/') && 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                );
+
+                const animaticScroll = document.getElementById('animatic-scroll');
+                animaticScroll.innerHTML = ''; // 清空现有内容
+
+                if (animaticFiles.length > 0) {
+                    // 显示Animatic区域
+                    document.getElementById('animatic-section').style.display = 'block';
+                    
+                    animaticFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Animatic image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        animaticScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const prevArrow = document.getElementById('animatic-prev-arrow');
+                    const nextArrow = document.getElementById('animatic-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    prevArrow.addEventListener('click', () => {
+                        animaticScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    nextArrow.addEventListener('click', () => {
+                        animaticScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Animatic区域，实现区域内图片并行加载
+                    const animaticSection = document.getElementById('animatic-section');
+                    observer.observe(animaticSection);
+                } else {
+                    // 如果没有Animatic图片，隐藏整个Animatic区域
+                    document.getElementById('animatic-section').style.display = 'none';
+                }
+
+                // 获取并显示Characters图片
+                const charactersFiles = workFiles.filter(file => 
+                    file.path.includes('/imgs/characters/') && 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                );
+
+                const charactersScroll = document.getElementById('characters-scroll');
+                charactersScroll.innerHTML = ''; // 清空现有内容
+
+                if (charactersFiles.length > 0) {
+                    // 显示Characters区域
+                    document.getElementById('characters-section').style.display = 'block';
+                    
+                    charactersFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Characters image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        charactersScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const charactersPrevArrow = document.getElementById('characters-prev-arrow');
+                    const charactersNextArrow = document.getElementById('characters-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    charactersPrevArrow.addEventListener('click', () => {
+                        charactersScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    charactersNextArrow.addEventListener('click', () => {
+                        charactersScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Characters区域，实现区域内图片并行加载
+                    const charactersSection = document.getElementById('characters-section');
+                    observer.observe(charactersSection);
+                } else {
+                    // 如果没有Characters图片，隐藏整个Characters区域
+                    document.getElementById('characters-section').style.display = 'none';
+                }
+
+                // 获取并显示Color Script图片
+                const colorScriptFiles = workFiles.filter(file => 
+                    file.path.includes('/imgs/color script/') && 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                );
+
+                const colorScriptGrid = document.getElementById('color-script-grid');
+                colorScriptGrid.innerHTML = ''; // 清空现有内容
+
+                if (colorScriptFiles.length > 0) {
+                    // 显示Color Script区域
+                    document.getElementById('color-script-section').style.display = 'block';
+                    
+                    colorScriptFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'color-script-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Color Script image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        colorScriptGrid.appendChild(img);
+                    });
+
+                    // 观察Color Script区域，实现区域内图片并行加载
+                    const colorScriptSection = document.getElementById('color-script-section');
+                    observer.observe(colorScriptSection);
+                } else {
+                    // 如果没有Color Script图片，隐藏整个Color Script区域
+                    document.getElementById('color-script-section').style.display = 'none';
+                }
+
+                // 获取并显示Layout图片
+                const layoutFiles = workFiles.filter(file => 
+                    file.path.includes('/imgs/layout/') && 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                );
+
+                const layoutScroll = document.getElementById('layout-scroll');
+                layoutScroll.innerHTML = ''; // 清空现有内容
+
+                if (layoutFiles.length > 0) {
+                    // 显示Layout区域
+                    document.getElementById('layout-section').style.display = 'block';
+                    
+                    layoutFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Layout image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        layoutScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const layoutPrevArrow = document.getElementById('layout-prev-arrow');
+                    const layoutNextArrow = document.getElementById('layout-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    layoutPrevArrow.addEventListener('click', () => {
+                        layoutScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    layoutNextArrow.addEventListener('click', () => {
+                        layoutScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Layout区域，实现区域内图片并行加载
+                    const layoutSection = document.getElementById('layout-section');
+                    observer.observe(layoutSection);
+                } else {
+                    // 如果没有Layout图片，隐藏整个Layout区域
+                    document.getElementById('layout-section').style.display = 'none';
+                }
+
+                // 获取并显示Colorkey图片
+                const colorkeyFiles = workFiles.filter(file => 
+                    file.path.includes('/imgs/colorkey/') && 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                );
+
+                const colorkeyScroll = document.getElementById('colorkey-scroll');
+                colorkeyScroll.innerHTML = ''; // 清空现有内容
+
+                if (colorkeyFiles.length > 0) {
+                    // 显示Colorkey区域
+                    document.getElementById('colorkey-section').style.display = 'block';
+                    
+                    colorkeyFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Colorkey image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        colorkeyScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const colorkeyPrevArrow = document.getElementById('colorkey-prev-arrow');
+                    const colorkeyNextArrow = document.getElementById('colorkey-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    colorkeyPrevArrow.addEventListener('click', () => {
+                        colorkeyScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    colorkeyNextArrow.addEventListener('click', () => {
+                        colorkeyScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Colorkey区域，实现区域内图片并行加载
+                    const colorkeySection = document.getElementById('colorkey-section');
+                    observer.observe(colorkeySection);
+                } else {
+                    // 如果没有Colorkey图片，隐藏整个Colorkey区域
+                    document.getElementById('colorkey-section').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('加载作品详情失败:', error);
+            }
+        }
+
+        // 点击关闭按钮或模态框外部关闭悬浮大图
+        const modal = document.getElementById('image-modal');
+        const closeBtn = document.querySelector('.close');
+        
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 页面加载完成后执行
+        window.addEventListener('load', loadWorkDetails);
+    </script>
+</body>
+</html>

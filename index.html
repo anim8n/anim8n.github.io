@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON</title>
+    <style>
+        body {
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #fff;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            background-color: transparent;
+            color: #fff;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        button {
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            font-family: inherit; /* 继承父元素的字体 */
+        }
+        button:hover {
+            opacity: 0.7;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin: 10px 60px 10px;
+            padding: 0;
+            border-bottom: none;
+            height: 60px; /* 高度增加20px */
+            font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
+        }
+        
+        .header * {
+            font-family: inherit;
+        }
+        
+        .nav-container {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 20px;
+        }
+        
+        .nav-item {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-item, .joinus-item {
+            position: relative;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            color: #fff;
+        }
+        
+        .project-item:hover, .joinus-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .project-dropdown, .joinus-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 0;
+            padding: 8px 0;
+            min-width: 180px;
+            display: none;
+            box-shadow: none;
+            z-index: 1000;
+        }
+        
+        .project-item:hover .project-dropdown, .joinus-item:hover .joinus-dropdown {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 0;
+        }
+        
+        #searchInput {
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 0;
+            font-size: 14px;
+            width: 220px;
+            background-color: transparent;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+        
+        #searchInput:focus {
+            outline: none;
+            border-color: #fff;
+        }
+        
+        #searchBtn {
+            padding: 6px 14px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            font-size: 14px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        #searchBtn:hover {
+            opacity: 0.7;
+        }
+        
+
+        .error {
+            color: rgba(255, 255, 255, 0.7);
+            margin: 40px 60px;
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Logo" style="height: 200px; width: auto; margin-left: -60px;">
+            <div class="nav-container">
+                <a href="index.html" class="nav-item">HOME</a>
+                <div class="project-item">
+                    <span>Projects</span>
+                    <div class="project-dropdown">
+                        <a href="feature_film.html" class="dropdown-item">Feature Film</a>
+                        <a href="AD.html" class="dropdown-item">AD</a>
+                    </div>
+                </div>
+                <div class="nav-item">About</div>
+                <div class="joinus-item">
+                    <span>Join us</span>
+                    <div class="joinus-dropdown">
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Send Resume</a>
+                        <a href="http://www.baidu.com" class="dropdown-item" target="_blank">Collaborate</a>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Projects Title...">
+                <button id="searchBtn">Search</button>
+            </div> -->
+        </div>
+        <span id="loading" class="loading" style="display: none;">LOADING...</span>
+        <div id="error" class="error"></div>
+        <div class="works-container" id="worksContainer"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            let repoInfo = null;
+
+            // 定义获取文件结构的函数
+            async function fetchFiles() {
+                // 直接使用配置的仓库URL和Token
+                const repoUrl = 'https://github.com/anim8n/portfolio';
+                const token = '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';
+                try {
+                    error.textContent = '';
+                    loading.style.display = 'inline-block';
+
+                    // 解析仓库URL
+                    repoInfo = parseRepoUrl(repoUrl);
+                    if (!repoInfo) {
+                        throw new Error('无效的GitHub仓库URL');
+                    }
+
+                    // 获取文件结构
+                    const files = await fetchRepoFiles(repoInfo.owner, repoInfo.repo, token);
+                    
+                    // 解析并展示作品集
+                    displayWorks(files);
+                } catch (err) {
+                    error.textContent = `错误: ${err.message}`;
+                    console.error('获取文件结构失败:', err);
+                } finally {
+                    loading.style.display = 'none';
+                }
+            }
+
+            // 搜索功能
+            const searchBtn = document.getElementById('searchBtn');
+            const searchInput = document.getElementById('searchInput');
+            
+            if (searchBtn && searchInput) {
+                searchBtn.addEventListener('click', () => {
+                    const searchTerm = searchInput.value.trim();
+                    if (searchTerm) {
+                        window.location.href = `search-results.html?q=${encodeURIComponent(searchTerm)}`;
+                    }
+                });
+                
+                // 回车键触发搜索
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        searchBtn.click();
+                    }
+                });
+            }
+            
+            // 页面加载时自动初始化视频
+            initVideo();
+
+            // 解析GitHub仓库URL
+            function parseRepoUrl(url) {
+                const match = url.match(/github\.com\/([^\/]+)\/([^\/\s]+)/);
+                if (match) {
+                    return {
+                        owner: match[1],
+                        repo: match[2].replace(/\.git$/, '')
+                    };
+                }
+                return null;
+            }
+
+            // 递归获取仓库文件结构
+            async function fetchRepoFiles(owner, repo, token, path = '') {
+                const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+                const headers = {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                };
+
+                const response = await fetch(apiUrl, { headers });
+                if (!response.ok) {
+                    throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+                }
+
+                const items = await response.json();
+                const files = [];
+
+                for (const item of items) {
+                    if (item.type === 'dir') {
+                        // 递归获取子目录内容
+                        const subFiles = await fetchRepoFiles(owner, repo, token, item.path);
+                        files.push({
+                            name: item.name,
+                            type: 'folder',
+                            path: item.path,
+                            children: subFiles
+                        });
+                    } else {
+                        files.push({
+                            name: item.name,
+                            type: 'file',
+                            path: item.path,
+                            size: item.size
+                        });
+                    }
+                }
+
+                return files;
+            }
+
+            // 初始化图片（替换原视频）
+            function initVideo() {
+                const worksContainer = document.getElementById('worksContainer');
+                worksContainer.innerHTML = '';
+
+                // 创建图片容器
+                const imageContainer = document.createElement('div');
+                imageContainer.style.width = '100%';
+                imageContainer.style.height = 'calc(100vh - 40px)'; // 减去header的高度（已减半）
+                imageContainer.style.overflow = 'hidden';
+                imageContainer.style.position = 'relative';
+                imageContainer.style.opacity = '0'; // 初始透明度为0
+                imageContainer.style.transition = 'opacity 2s ease-in'; // 添加渐入过渡效果
+                
+                // 延迟执行渐入效果，确保图片已经开始加载
+                setTimeout(() => {
+                    imageContainer.style.opacity = '1';
+                }, 100);
+                
+                // 创建图片元素
+                const image = document.createElement('img');
+                image.src = 'index.png';
+                image.style.width = '100%';
+                image.style.height = '100%';
+                image.style.objectFit = 'cover';
+                image.style.userSelect = 'none';
+                image.style.display = 'block';
+                
+                // 添加图片到容器
+                imageContainer.appendChild(image);
+                worksContainer.appendChild(imageContainer);
+            }
+
+            // 展示作品集
+            function displayWorks(files) {
+                const worksContainer = document.getElementById('worksContainer');
+                worksContainer.innerHTML = '';
+
+                // 找到zuopingji目录
+                const zuopingjiFolder = files.find(file => file.name === 'zuopingji' && file.type === 'folder');
+                if (!zuopingjiFolder) {
+                    error.textContent = '未找到zuopingji目录';
+                    return;
+                }
+
+                // 获取所有作品集目录，并按名称排序
+                const workFolders = zuopingjiFolder.children
+                    .filter(file => file.type === 'folder')
+                    .sort((a, b) => a.name.localeCompare(b.name));
+
+                if (workFolders.length === 0) {
+                    error.textContent = '未找到作品集目录';
+                    return;
+                }
+
+                // 创建其他作品集的容器
+                const otherWorksContainer = document.createElement('div');
+                otherWorksContainer.className = 'other-works-container';
+
+                // 处理所有作品集
+                for (let i = 0; i < workFolders.length; i++) {
+                    const workFolder = workFolders[i];
+                    // 找到imgs目录
+                    const imgsFolder = workFolder.children.find(file => file.name === 'imgs' && file.type === 'folder');
+                    if (!imgsFolder) continue;
+
+                    // 找到第一张图片
+                    const firstImage = imgsFolder.children.find(file => 
+                        file.type === 'file' && 
+                        /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name)
+                    );
+
+                    if (firstImage) {
+                        // 创建作品展示项
+                        const workItem = document.createElement('div');
+                        workItem.className = 'other-work';
+
+                        // 创建图片元素
+                        const img = document.createElement('img');
+                        img.className = 'work-image';
+                        // 构建图片的直接URL
+                        img.src = `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/main/${firstImage.path}`;
+                        img.alt = workFolder.name;
+                        img.style.cursor = 'pointer';
+                        img.addEventListener('click', () => {
+                            window.location.href = `work-details.html?work=${encodeURIComponent(workFolder.name)}`;
+                        });
+                        img.onerror = () => {
+                            img.src = 'data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22300%22 height%3D%22200%22 viewBox%3D%220 0 300 200%22%3E%3Crect width%3D%22300%22 height%3D%22200%22 fill%3D%22%23f0f0f0%22%2F%3E%3Ctext x%3D%2250%2525%22 y%3D%2250%2525%22 dominant-baseline%3D%22middle%22 text-anchor%3D%22middle%22 font-family%3D%22Arial%22 font-size%3D%2216%22 fill%3D%22%23999%22%3E图片加载失败%3C%2Ftext%3E%3C%2Fsvg%3E';
+                        };
+
+                        // 创建标题元素
+                        const title = document.createElement('div');
+                        title.className = 'work-title';
+                        title.textContent = workFolder.name;
+
+                        // 组合并添加到容器
+                        workItem.appendChild(img);
+                        workItem.appendChild(title);
+                        otherWorksContainer.appendChild(workItem);
+                    }
+                }
+
+                // 将其他作品集容器添加到主容器
+                if (otherWorksContainer.children.length > 0) {
+                    worksContainer.appendChild(otherWorksContainer);
+                }
+            }
+
+            // 构建文件树（备用功能）
+            function buildFileTree(files, container) {
+                const ul = document.createElement('ul');
+                ul.style.listStyle = 'none';
+                ul.style.paddingLeft = '0';
+
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    li.className = `tree-item ${file.type}`;
+                    
+                    if (file.type === 'folder') {
+                        const toggle = document.createElement('span');
+                        toggle.className = 'toggle';
+                        toggle.textContent = '▶';
+                        toggle.addEventListener('click', function() {
+                            const childrenContainer = li.querySelector('.tree-node');
+                            if (childrenContainer.style.display === 'none') {
+                                childrenContainer.style.display = 'block';
+                                toggle.textContent = '▼';
+                            } else {
+                                childrenContainer.style.display = 'none';
+                                toggle.textContent = '▶';
+                            }
+                        });
+                        li.appendChild(toggle);
+                        
+                        const folderName = document.createElement('span');
+                        folderName.textContent = file.name;
+                        li.appendChild(folderName);
+
+                        const childrenContainer = document.createElement('div');
+                        childrenContainer.className = 'tree-node';
+                        buildFileTree(file.children, childrenContainer);
+                        li.appendChild(childrenContainer);
+                    } else {
+                        const fileName = document.createElement('span');
+                        fileName.textContent = file.name;
+                        li.appendChild(fileName);
+                    }
+
+                    ul.appendChild(li);
+                });
+
+                container.appendChild(ul);
+            }
+        });
+    </script>
+</body>
+</html>
