@@ -424,6 +424,8 @@
             cursor: pointer;
         }
     </style>
+    <!-- 引入Token Manager -->
+    <script src="token-manager.js"></script>
 </head>
 <body>
     <div class="container">
@@ -525,7 +527,7 @@
         // GitHub API配置
         const owner = 'anim8n';
         const repo = 'portfolio';
-        const token = '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';
+        const token = getGitHubToken();
 
         // 获取仓库结构
         async function fetchRepoStructure(owner, repo, token) {

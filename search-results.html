@@ -248,6 +248,8 @@
         
 
     </style>
+    <!-- 引入Token Manager -->
+    <script src="token-manager.js"></script>
 </head>
 <body>
     <div class="container">
@@ -351,7 +353,7 @@
             
             // 直接使用配置的仓库URL和Token
             const repoUrl = 'https://github.com/anim8n/portfolio';
-            const token = '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';
+            const token = getGitHubToken();
             
             // 解析仓库URL
             function parseRepoUrl(url) {
