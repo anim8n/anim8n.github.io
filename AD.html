@@ -427,7 +427,6 @@
                 // 创建标题和描述
                 const textContainer = document.createElement('div');
                 textContainer.style.cssText = `
-                    text-align: center;
                     line-height: 1.5;
                 `;
 
@@ -438,6 +437,7 @@
                     font-weight: bold;
                     margin-bottom: 8px;
                     color: #a6a4ff;
+                    text-align: left;
                 `;
 
                 const description = document.createElement('div');
@@ -445,6 +445,9 @@
                 description.style.cssText = `
                     font-size: 14px;
                     color: #818181;
+                    text-align: justify;
+                    text-align-last: left;
+                    text-indent: 0;
                 `;
 
                 textContainer.appendChild(title);
