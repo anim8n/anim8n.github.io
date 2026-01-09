@@ -388,9 +388,11 @@
             for (const work of works) {
                 const workItem = document.createElement('div');
                 workItem.style.cssText = `
-                    text-align: center;
                     transition: transform 0.3s ease;
                     cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
                 `;
                 workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
                 workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
@@ -408,8 +410,6 @@
                     overflow: hidden;
                     margin-bottom: 15px;
                     position: relative;
-                    margin-left: auto;
-                    margin-right: auto;
                 `;
 
                 // 创建图片元素
@@ -484,9 +484,10 @@
 
                 imageContainer.appendChild(image);
 
-                // 创建标题和描述
+                // 创建标题和描述容器，与图片宽度一致
                 const textContainer = document.createElement('div');
                 textContainer.style.cssText = `
+                    width: 417px;
                     line-height: 1.5;
                 `;
 
@@ -498,6 +499,8 @@
                     margin-bottom: 8px;
                     color: #a6a4ff;
                     text-align: left;
+                    word-wrap: break-word;
+                    white-space: normal;
                 `;
 
                 const description = document.createElement('div');
@@ -505,8 +508,9 @@
                 description.style.cssText = `
                     font-size: 14px;
                     color: #818181;
-                    text-align: justify;
-                    text-align-last: left;
+                    text-align: left;
+                    word-wrap: break-word;
+                    white-space: normal;
                     text-indent: 0;
                 `;
 
