@@ -467,10 +467,25 @@
                         }
                     };
                     
-                    // 图片加载失败时使用占位图
+                    // 图片加载失败时的处理函数，修复重试计数逻辑
+                    let retryCount = 0;
+                    const maxRetries = 2;
+                    
                     image.onerror = () => {
-                        image.src = 'img_not_found.png';
-                        image.style.opacity = '1';
+                        console.error(`图片加载失败 (${retryCount + 1}/${maxRetries}):`, work.coverCompressUrl);
+                        
+                        if (retryCount < maxRetries) {
+                            // 还有重试次数，继续重试
+                            retryCount++;
+                            setTimeout(() => {
+                                image.src = image.dataset.src;
+                            }, 500 * retryCount); // 指数退避重试
+                        } else {
+                            // 重试次数用完，使用占位图
+                            console.log('图片多次加载失败，使用占位图');
+                            image.src = 'img_not_found.png';
+                            image.style.opacity = '1';
+                        }
                     };
                     
                     // 默认隐藏，加载完成后显示
@@ -635,23 +650,59 @@
                     
                     console.log(`文件夹 ${folder} 中的图片文件:`, imageFiles);
                     
-                    // 优先选择封面_compress图片
-                    let coverImage = imageFiles.find(item => 
-                        item.path.includes('封面_compress.jpg') || 
-                        item.path.includes('封面_compress.png')
-                    );
+                    // 优化封面图片匹配逻辑，增加更多命名可能性
+                    const coverKeywords = [
+                        '封面_compress', '封面', 
+                        'cover_compress', 'cover',
+                        'thumbnail', 'thumb', 'thumbnails',
+                        'preview', 'pre',
+                        'main', 'main_image',
+                        'thumbnail_compress', 'thumb_compress',
+                        'preview_compress', 'pre_compress',
+                        'main_compress', 'main_image_compress',
+                        '缩略图', '预览图', '主图',
+                        '缩略图_compress', '预览图_compress', '主图_compress'
+                    ];
+                    const imageExtensions = ['.jpg', '.jpeg', '.png', '.jfif'];
                     
-                    // 如果没有封面_compress图片，选择封面图片
+                    // 第一步：优先选择任何包含_compress的图片
+                    let coverImage = imageFiles.find(item => {
+                        const lowerPath = item.path.toLowerCase();
+                        return lowerPath.includes('_compress') &&
+                               imageExtensions.some(ext => lowerPath.endsWith(ext));
+                    });
+                    
+                    // 第二步：如果没有压缩版，选择包含封面相关关键词的图片
                     if (!coverImage) {
-                        coverImage = imageFiles.find(item => 
-                            item.path.includes('封面.jpg') || 
-                            item.path.includes('封面.png')
-                        );
+                        coverImage = imageFiles.find(item => {
+                            const lowerPath = item.path.toLowerCase();
+                            return coverKeywords.some(keyword => 
+                                lowerPath.includes(keyword.toLowerCase())
+                            ) &&
+                            imageExtensions.some(ext => lowerPath.endsWith(ext));
+                        });
                     }
                     
-                    // 设置图片URL（只使用指定的封面图片，不使用其他图片）
+                    // 如果没有找到特定命名的封面图片，选择文件夹中的第一张图片
+                    if (!coverImage && imageFiles.length > 0) {
+                        coverImage = imageFiles[0];
+                        console.log(`文件夹 ${folder} 中未找到特定命名的封面图片，使用第一张图片:`, coverImage.path);
+                    }
+                    
+                    // 输出找到的封面图片信息
                     if (coverImage) {
-                        work.coverCompressUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${coverImage.path}`;
+                        console.log(`文件夹 ${folder} 中找到封面图片:`, coverImage.path);
+                    } else {
+                        console.log(`文件夹 ${folder} 中未找到任何图片`);
+                    }
+                    
+                    // 设置图片URL，确保路径正确编码
+                    if (coverImage) {
+                        // 构建完整的图片URL并进行编码
+                        const imagePath = coverImage.path;
+                        // 确保URL路径部分正确编码
+                        const encodedPath = imagePath.split('/').map(encodeURIComponent).join('/');
+                        work.coverCompressUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${encodedPath}`;
                         console.log(`为作品 ${folder} 设置图片URL:`, work.coverCompressUrl);
                     }
                     
