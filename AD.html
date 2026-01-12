@@ -104,11 +104,12 @@
             cursor: pointer;
             padding: 8px 16px;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
+            transition: color 0.3s ease, background-color 0.3s ease;
         }
         
         .nav-item:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            color: #a6a4ff;
         }
         
         .project-item, .joinus-item {
@@ -116,12 +117,13 @@
             cursor: pointer;
             padding: 8px 16px;
             border-radius: 4px;
-            transition: background-color 0.3s ease;
+            transition: color 0.3s ease, background-color 0.3s ease;
             color: #fff;
         }
         
         .project-item:hover, .joinus-item:hover {
             background-color: rgba(255, 255, 255, 0.1);
+            color: #a6a4ff;
         }
         
         .project-dropdown, .joinus-dropdown {
@@ -147,7 +149,7 @@
             padding: 8px 16px;
             color: #fff;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: color 0.3s ease, background-color 0.3s ease;
             text-decoration: none;
             display: block;
             text-align: center;
@@ -155,6 +157,7 @@
         
         .dropdown-item:hover {
             background-color: rgba(255, 255, 255, 0.2);
+            color: #a6a4ff;
         }
         
         .search-container {
@@ -415,9 +418,11 @@
                 // 创建图片元素
                 const image = document.createElement('img');
                 image.style.cssText = `
-                    max-width: 100%;
-                    max-height: 100%;
+                    width: 100%;
+                    height: 100%;
                     object-fit: cover;
+                    transform: scale(1.1);
+                    transition: transform 0.3s ease;
                 `;
 
                 if (work.coverCompressUrl) {
@@ -616,7 +621,15 @@
                     .filter(item => item.path.startsWith('AD/') && item.path.split('/').length === 2 && item.type === 'tree')
                     .map(item => item.path);
                 
-                console.log('找到的作品子文件夹:', adSubfolders);
+                // 按文件夹名中的数字顺序进行排序
+                adSubfolders.sort((a, b) => {
+                    // 提取数字部分，支持1.xx, 2.xx这样的格式
+                    const numA = parseInt(a.match(/\d+/)[0]);
+                    const numB = parseInt(b.match(/\d+/)[0]);
+                    return numA - numB;
+                });
+                
+                console.log('排序后的作品子文件夹:', adSubfolders);
                 
                 // 获取每个作品的信息
                 const works = await Promise.all(adSubfolders.map(async (folder) => {
