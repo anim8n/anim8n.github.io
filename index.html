@@ -392,37 +392,76 @@
                 return files;
             }
 
-            // 初始化图片（替换原视频）
+            // 初始化视频
             function initVideo() {
                 const worksContainer = document.getElementById('worksContainer');
                 worksContainer.innerHTML = '';
 
-                // 创建图片容器
-                const imageContainer = document.createElement('div');
-                imageContainer.style.width = '100%';
-                imageContainer.style.height = 'calc(100vh - 40px)'; // 减去header的高度（已减半）
-                imageContainer.style.overflow = 'hidden';
-                imageContainer.style.position = 'relative';
-                imageContainer.style.opacity = '0'; // 初始透明度为0
-                imageContainer.style.transition = 'opacity 2s ease-in'; // 添加渐入过渡效果
+                // 创建视频容器
+                const videoContainer = document.createElement('div');
+                videoContainer.style.width = '100%';
+                videoContainer.style.height = 'calc(100vh - 40px)'; // 减去header的高度（已减半）
+                videoContainer.style.overflow = 'hidden';
+                videoContainer.style.position = 'relative';
+                videoContainer.style.opacity = '0'; // 初始透明度为0
+                videoContainer.style.transition = 'opacity 2s ease-in'; // 添加渐入过渡效果
                 
-                // 延迟执行渐入效果，确保图片已经开始加载
+                // 延迟执行渐入效果，确保视频已经开始加载
                 setTimeout(() => {
-                    imageContainer.style.opacity = '1';
+                    videoContainer.style.opacity = '1';
                 }, 100);
                 
-                // 创建图片元素
-                const image = document.createElement('img');
-                image.src = 'index.png';
-                image.style.width = '100%';
-                image.style.height = '100%';
-                image.style.objectFit = 'cover';
-                image.style.userSelect = 'none';
-                image.style.display = 'block';
+                // 创建视频元素
+                const video = document.createElement('video');
+                video.src = 'index_video.mp4';
+                video.style.width = '100%';
+                video.style.height = '100%';
+                video.style.objectFit = 'cover';
+                video.style.userSelect = 'none';
+                video.style.display = 'block';
+                video.muted = true; // 默认静音
+                video.loop = true; // 循环播放
+                video.autoplay = true; // 自动播放
+                video.setAttribute('playsinline', 'playsinline'); // 内联播放，避免在移动设备上全屏
                 
-                // 添加图片到容器
-                imageContainer.appendChild(image);
-                worksContainer.appendChild(imageContainer);
+                // 添加视频到容器
+                videoContainer.appendChild(video);
+                
+                // 创建声音控制按钮
+                const soundBtn = document.createElement('button');
+                soundBtn.innerHTML = '🔇'; // 静音图标
+                soundBtn.style.position = 'absolute';
+                soundBtn.style.top = '20px';
+                soundBtn.style.right = '20px';
+                soundBtn.style.width = '40px';
+                soundBtn.style.height = '40px';
+                soundBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                soundBtn.style.color = 'white';
+                soundBtn.style.border = 'none';
+                soundBtn.style.borderRadius = '50%';
+                soundBtn.style.cursor = 'pointer';
+                soundBtn.style.fontSize = '20px';
+                soundBtn.style.display = 'flex';
+                soundBtn.style.alignItems = 'center';
+                soundBtn.style.justifyContent = 'center';
+                soundBtn.style.transition = 'opacity 0.3s ease';
+                
+                // 添加声音控制功能
+                soundBtn.addEventListener('click', () => {
+                    if (video.muted) {
+                        video.muted = false;
+                        soundBtn.innerHTML = '🔊'; // 有声图标
+                    } else {
+                        video.muted = true;
+                        soundBtn.innerHTML = '🔇'; // 静音图标
+                    }
+                });
+                
+                // 添加声音按钮到容器
+                videoContainer.appendChild(soundBtn);
+                
+                // 添加容器到页面
+                worksContainer.appendChild(videoContainer);
             }
 
             // 展示作品集
