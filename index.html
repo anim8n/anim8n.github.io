@@ -419,9 +419,9 @@
                 video.style.objectFit = 'cover';
                 video.style.userSelect = 'none';
                 video.style.display = 'block';
-                video.muted = true; // 默认静音
+                video.muted = false; // 取消默认静音
                 video.loop = true; // 循环播放
-                video.autoplay = true; // 自动播放
+                video.autoplay = false; // 移除自动播放
                 video.setAttribute('playsinline', 'playsinline'); // 内联播放，避免在移动设备上全屏
                 
                 // 添加视频到容器
@@ -429,7 +429,7 @@
                 
                 // 创建声音控制按钮
                 const soundBtn = document.createElement('button');
-                soundBtn.innerHTML = '🔇'; // 静音图标
+                soundBtn.innerHTML = '🔊'; // 初始显示有声图标
                 soundBtn.style.position = 'absolute';
                 soundBtn.style.top = '20px';
                 soundBtn.style.right = '20px';
@@ -459,6 +459,71 @@
                 
                 // 添加声音按钮到容器
                 videoContainer.appendChild(soundBtn);
+                
+                // 创建播放/暂停按钮
+                const playBtn = document.createElement('button');
+                playBtn.innerHTML = '▶'; // 初始显示播放图标
+                playBtn.style.position = 'absolute';
+                playBtn.style.top = '50%';
+                playBtn.style.left = '50%';
+                playBtn.style.transform = 'translate(-50%, -50%)';
+                playBtn.style.width = '60px'; // 固定宽度
+                playBtn.style.height = '60px'; // 固定高度
+                playBtn.style.backgroundColor = 'transparent'; // 去掉背景色
+                playBtn.style.color = 'white';
+                playBtn.style.border = 'none'; // 去掉边框
+                playBtn.style.borderRadius = '0'; // 去掉圆形边框
+                playBtn.style.cursor = 'pointer';
+                playBtn.style.fontSize = '50px'; // 缩小图标尺寸
+                playBtn.style.display = 'flex'; // 使用flex布局
+                playBtn.style.alignItems = 'center'; // 垂直居中
+                playBtn.style.justifyContent = 'center'; // 水平居中
+                playBtn.style.transition = 'opacity 0.5s ease'; // 平滑的透明度过渡
+                playBtn.style.zIndex = '10';
+                playBtn.style.fontFamily = 'Arial, sans-serif'; // 使用可靠的字体
+                playBtn.style.padding = '0'; // 去掉内边距
+                playBtn.style.margin = '0'; // 去掉外边距
+                playBtn.style.outline = 'none'; // 去掉聚焦轮廓
+                playBtn.style.webkitFontSmoothing = 'antialiased'; // 平滑字体
+                playBtn.style.mozOsxFontSmoothing = 'grayscale'; // 平滑字体
+                
+                // 添加播放/暂停功能
+                playBtn.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                        playBtn.innerHTML = '■'; // 播放时显示暂停图标
+                        playBtn.style.fontSize = '60px'; // 增大暂停图标尺寸
+                        playBtn.style.paddingLeft = '0'; // 暂停图标居中
+                        playBtn.style.top = '49%'; // 暂停按钮往上移一点点（比之前稍低）
+                        // 视频播放时，按钮淡出
+                        setTimeout(() => {
+                            playBtn.style.opacity = '0';
+                        }, 500);
+                    } else {
+                        video.pause();
+                        playBtn.innerHTML = '▶'; // 暂停时显示播放图标
+                        playBtn.style.fontSize = '50px'; // 恢复播放图标尺寸
+                        playBtn.style.paddingLeft = '5px'; // 播放图标微调，使其看起来居中
+                        playBtn.style.top = '50%'; // 播放按钮恢复居中位置
+                        // 视频暂停时，按钮恢复显示
+                        playBtn.style.opacity = '1';
+                    }
+                });
+                
+                // 初始设置播放图标位置和尺寸
+                playBtn.style.paddingLeft = '5px';
+                playBtn.style.fontSize = '50px';
+                
+                // 视频结束时恢复播放图标和显示
+                video.addEventListener('ended', () => {
+                    playBtn.innerHTML = '▶';
+                    playBtn.style.fontSize = '50px'; // 恢复播放图标尺寸
+                    playBtn.style.paddingLeft = '5px'; // 播放图标微调，使其看起来居中
+                    playBtn.style.opacity = '1';
+                });
+                
+                // 添加播放/暂停按钮到容器
+                videoContainer.appendChild(playBtn);
                 
                 // 添加容器到页面
                 worksContainer.appendChild(videoContainer);
