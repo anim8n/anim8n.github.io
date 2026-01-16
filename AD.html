@@ -426,6 +426,9 @@
                     transform: scale(1.1);
                     transition: transform 0.3s ease;
                 `;
+                
+                // 添加调试信息，显示当前处理的作品
+                console.log('正在处理作品:', work.folder, '标题:', work.title, '图片URL:', work.coverCompressUrl);
 
                 if (work.coverCompressUrl) {
                     // 设置图片懒加载，初始只设置data-src
@@ -604,20 +607,21 @@
                 const repo = 'portfolio';
                 const token = getGitHubToken();
                 
-                // 获取仓库结构 - 带缓存机制
+                // 获取仓库结构 - 开发环境下禁用缓存以便调试
                 const CACHE_KEY = 'ad_repo_data';
                 const CACHE_EXPIRY = 60 * 60 * 1000; // 1小时过期
                 
                 let repoData;
-                const cachedData = localStorage.getItem(CACHE_KEY);
-                
-                if (cachedData) {
-                    const { data, timestamp } = JSON.parse(cachedData);
-                    if (Date.now() - timestamp < CACHE_EXPIRY) {
-                        console.log('使用缓存的仓库结构数据');
-                        repoData = data;
-                    }
-                }
+                // 开发环境下禁用缓存
+                // const cachedData = localStorage.getItem(CACHE_KEY);
+                // 
+                // if (cachedData) {
+                //     const { data, timestamp } = JSON.parse(cachedData);
+                //     if (Date.now() - timestamp < CACHE_EXPIRY) {
+                //         console.log('使用缓存的仓库结构数据');
+                //         repoData = data;
+                //     }
+                // }
                 
                 if (!repoData) {
                     console.log('从GitHub API获取仓库结构数据');
@@ -649,6 +653,7 @@
                 });
                 
                 console.log('排序后的作品子文件夹:', adSubfolders);
+                console.log('作品总数:', adSubfolders.length);
                 
                 // 获取每个作品的信息
                 const works = await Promise.all(adSubfolders.map(async (folder) => {
