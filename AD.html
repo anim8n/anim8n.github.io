@@ -417,6 +417,8 @@
 
                 // 创建图片元素
                 const image = document.createElement('img');
+                // 设置crossOrigin属性以允许跨域图片在canvas中使用
+                image.crossOrigin = 'anonymous';
                 image.style.cssText = `
                     width: 100%;
                     height: 100%;
@@ -475,15 +477,17 @@
                     // 图片加载失败时的处理函数，修复重试计数逻辑
                     let retryCount = 0;
                     const maxRetries = 2;
+                    const originalImageUrl = work.coverCompressUrl;
                     
                     image.onerror = () => {
-                        console.error(`图片加载失败 (${retryCount + 1}/${maxRetries}):`, work.coverCompressUrl);
+                        console.error(`图片加载失败 (${retryCount + 1}/${maxRetries}):`, originalImageUrl);
                         
                         if (retryCount < maxRetries) {
                             // 还有重试次数，继续重试
                             retryCount++;
                             setTimeout(() => {
-                                image.src = image.dataset.src;
+                                // 使用原始URL进行重试，而不是依赖已被移除的data-src
+                                image.src = originalImageUrl;
                             }, 500 * retryCount); // 指数退避重试
                         } else {
                             // 重试次数用完，使用占位图
@@ -504,6 +508,13 @@
 
                 imageContainer.appendChild(image);
 
+                // 添加点击事件，跳转到作品详情页
+                imageContainer.addEventListener('click', () => {
+                    // 编码文件夹路径作为URL参数
+                    const encodedFolder = encodeURIComponent(work.folder);
+                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                });
+
                 // 创建标题和描述容器，与图片宽度一致
                 const textContainer = document.createElement('div');
                 textContainer.style.cssText = `
@@ -521,7 +532,15 @@
                     text-align: left;
                     word-wrap: break-word;
                     white-space: normal;
+                    cursor: pointer;
                 `;
+                
+                // 添加点击事件，跳转到作品详情页
+                title.addEventListener('click', () => {
+                    // 编码文件夹路径作为URL参数
+                    const encodedFolder = encodeURIComponent(work.folder);
+                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                });
 
                 const description = document.createElement('div');
                 description.innerHTML = work.description.replace(/\n/g, '<br>');
