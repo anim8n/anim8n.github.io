@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 防止页面缓存 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>MOON</title>
     <style>
         body {
@@ -519,7 +523,7 @@
 
         <!-- Color Script展示区域 -->
         <div id="color-script-section" style="display: none;">
-            <h3 id="color-script-title">Color Script</h3>
+            <h3 id="color-script-title">Colorkey</h3>
             <div id="color-script-container">
                 <div id="color-script-grid"></div>
             </div>
@@ -537,7 +541,7 @@
         
         <!-- Colorkey展示区域 -->
         <div id="colorkey-section" style="display: none;">
-            <h3 id="colorkey-title">Colorkey</h3>
+            <h3 id="colorkey-title">Color Script</h3>
             <div id="colorkey-container">
                 <button id="colorkey-prev-arrow" class="scroll-arrow">&lt;</button>
                 <div id="colorkey-scroll"></div>
@@ -806,7 +810,7 @@
 
                 // 获取并显示Color Script图片
                 const colorScriptFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/color script/') && 
+                    file.path.includes('/imgs/colorkey/') && 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
                 );
 
@@ -919,7 +923,7 @@
 
                 // 获取并显示Colorkey图片
                 const colorkeyFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/colorkey/') && 
+                    file.path.includes('/imgs/color script/') && 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
                 );
 
