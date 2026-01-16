@@ -515,7 +515,7 @@
                 imageContainer.addEventListener('click', () => {
                     // 编码文件夹路径作为URL参数
                     const encodedFolder = encodeURIComponent(work.folder);
-                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                    window.location.href = `ad-work-detail.html?folder=${encodedFolder}`;
                 });
 
                 // 创建标题和描述容器，与图片宽度一致
@@ -542,7 +542,7 @@
                 title.addEventListener('click', () => {
                     // 编码文件夹路径作为URL参数
                     const encodedFolder = encodeURIComponent(work.folder);
-                    window.location.href = `work-details.html?folder=${encodedFolder}`;
+                    window.location.href = `ad-work-detail.html?folder=${encodedFolder}`;
                 });
 
                 const description = document.createElement('div');
