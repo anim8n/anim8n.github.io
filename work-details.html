@@ -235,15 +235,13 @@
             text-align-last: left;
         }
 
-        /* Animatic展示区域样式 */
-        #animatic-section,
+        /* Character Design、Layout、Colorkey展示区域样式 */
         #characters-section,
         #layout-section,
         #colorkey-section {
             padding: 40px 0;
         }
 
-        #animatic-title,
         #characters-title,
         #layout-title,
         #colorkey-title {
@@ -255,7 +253,6 @@
             color: #a6a4ff;
         }
 
-        #animatic-container,
         #characters-container,
         #layout-container,
         #colorkey-container {
@@ -266,7 +263,6 @@
             padding: 20px 0;
         }
 
-        #animatic-scroll,
         #characters-scroll,
         #layout-scroll,
         #colorkey-scroll {
@@ -279,7 +275,6 @@
             scrollbar-width: none; /* Firefox */
         }
 
-        #animatic-scroll::-webkit-scrollbar,
         #characters-scroll::-webkit-scrollbar,
         #layout-scroll::-webkit-scrollbar,
         #colorkey-scroll::-webkit-scrollbar {
@@ -512,19 +507,9 @@
             <p id="work-description"></p>
         </div>
 
-        <!-- Animatic展示区域 -->
-        <div id="animatic-section" style="display: none;">
-            <h3 id="animatic-title">Animatic</h3>
-            <div id="animatic-container">
-                <button id="animatic-prev-arrow" class="scroll-arrow">&lt;</button>
-                <div id="animatic-scroll"></div>
-                <button id="animatic-next-arrow" class="scroll-arrow">&gt;</button>
-            </div>
-        </div>
-        
-        <!-- Characters展示区域 -->
+        <!-- Character Design展示区域 -->
         <div id="characters-section" style="display: none;">
-            <h3 id="characters-title">Characters</h3>
+            <h3 id="characters-title">Character Design</h3>
             <div id="characters-container">
                 <button id="characters-prev-arrow" class="scroll-arrow">&lt;</button>
                 <div id="characters-scroll"></div>
@@ -756,70 +741,7 @@
                 // 观察首图
                 observer.observe(mainImage);
                 
-                // 获取并显示Animatic图片
-                const animaticFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/animatic/') && 
-                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
-                );
-
-                const animaticScroll = document.getElementById('animatic-scroll');
-                animaticScroll.innerHTML = ''; // 清空现有内容
-
-                if (animaticFiles.length > 0) {
-                    // 显示Animatic区域
-                    document.getElementById('animatic-section').style.display = 'block';
-                    
-                    animaticFiles.forEach(file => {
-                        const img = document.createElement('img');
-                        img.className = 'animatic-image';
-                        // 使用data-src实现懒加载
-                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
-                        img.alt = `Animatic image`;
-                        img.style.opacity = '0';
-                        img.style.transition = 'opacity 0.3s ease-in-out';
-                        
-                        // 添加点击事件，显示悬浮大图
-                        img.addEventListener('click', () => {
-                            const modal = document.getElementById('image-modal');
-                            const modalImg = document.querySelector('.modal-image');
-                            modal.style.display = 'block';
-                            modalImg.src = img.getAttribute('data-src');
-                        });
-                        
-                        // 添加加载完成和错误处理
-                        img.onload = function() {
-                            this.style.opacity = '1';
-                        };
-                        img.onerror = function() {
-                            this.src = 'img_not_found.png';
-                            this.style.opacity = '1';
-                        };
-                        
-                        animaticScroll.appendChild(img);
-                    });
-
-                    // 实现箭头滚动功能
-                    const prevArrow = document.getElementById('animatic-prev-arrow');
-                    const nextArrow = document.getElementById('animatic-next-arrow');
-                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
-
-                    prevArrow.addEventListener('click', () => {
-                        animaticScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                    });
-
-                    nextArrow.addEventListener('click', () => {
-                        animaticScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                    });
-
-                    // 观察Animatic区域，实现区域内图片并行加载
-                    const animaticSection = document.getElementById('animatic-section');
-                    observer.observe(animaticSection);
-                } else {
-                    // 如果没有Animatic图片，隐藏整个Animatic区域
-                    document.getElementById('animatic-section').style.display = 'none';
-                }
-
-                // 获取并显示Characters图片
+                // 获取并显示Character Design图片
                 const charactersFiles = workFiles.filter(file => 
                     file.path.includes('/imgs/characters/') && 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
@@ -829,7 +751,7 @@
                 charactersScroll.innerHTML = ''; // 清空现有内容
 
                 if (charactersFiles.length > 0) {
-                    // 显示Characters区域
+                    // 显示Character Design区域
                     document.getElementById('characters-section').style.display = 'block';
                     
                     charactersFiles.forEach(file => {
@@ -837,7 +759,7 @@
                         img.className = 'animatic-image';
                         // 使用data-src实现懒加载
                         img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
-                        img.alt = `Characters image`;
+                        img.alt = `Character Design image`;
                         img.style.opacity = '0';
                         img.style.transition = 'opacity 0.3s ease-in-out';
                         
