@@ -365,9 +365,18 @@
         /* YouTube视频容器样式 */
         #youtube-video-container {
             position: relative;
-            width: 100%;
+            width: 80%;
+            margin: 20px auto;
+            max-height: 600px;
+            height: auto;
+            overflow: hidden;
+        }
+        
+        /* 保持16:9宽高比 */
+        #youtube-video-container::before {
+            content: "";
+            display: block;
             padding-bottom: 56.25%; /* 16:9 宽高比 */
-            height: 0;
         }
 
         #youtube-video-container iframe {
@@ -765,11 +774,13 @@
                         mainImage.style.display = 'none';
                         playButton.style.display = 'none';
                         
-                        // 优化容器样式
-                        youtubeContainer.style.aspectRatio = '16 / 9';
-                        youtubeContainer.style.width = '100%';
+                        // 优化容器样式，与AD.html中的图片容器样式保持一致
+                        youtubeContainer.style.width = '80%';
                         youtubeContainer.style.height = 'auto';
                         youtubeContainer.style.position = 'relative';
+                        youtubeContainer.style.overflow = 'hidden';
+                        youtubeContainer.style.margin = '20px auto';
+                        youtubeContainer.style.maxHeight = '600px';
                         
                         // 创建YouTube iframe - 简化配置以避免Error 153
                         const iframe = document.createElement('iframe');
