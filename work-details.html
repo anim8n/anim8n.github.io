@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 添加YouTube要求的referrer策略 -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <!-- 防止页面缓存 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -208,6 +210,7 @@
             padding: 0;
             overflow: hidden;
             background-color: #222222;
+            position: relative;
         }
 
         #main-image {
@@ -215,6 +218,66 @@
             height: auto;
             object-fit: contain;
             display: block;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* YouTube视频容器样式 */
+        #youtube-video-container {
+            position: relative;
+            width: 80%;
+            margin: 20px auto;
+            max-height: 600px;
+            height: auto;
+            overflow: hidden;
+        }
+        
+        /* 保持16:9宽高比 */
+        #youtube-video-container::before {
+            content: "";
+            display: block;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+        }
+        
+        /* YouTube视频iframe样式 */
+        #youtube-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        /* 播放按钮样式 */
+        #play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent;
+            color: white;
+            border: none;
+            border-radius: 0;
+            width: auto;
+            height: auto;
+            font-size: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            padding: 0;
+            pointer-events: none;
+        }
+        
+        /* 鼠标悬浮效果 */
+        #main-image-container:hover #main-image {
+            opacity: 0.7;
+        }
+        
+        #main-image-container:hover #play-button {
+            opacity: 1;
         }
 
         /* 作品信息样式 */
@@ -500,9 +563,11 @@
             </div> -->
         </div>
 
-        <!-- 首图显示区域 -->
+        <!-- 首图/视频显示区域 -->
         <div id="main-image-container">
-            <img id="main-image" >
+            <img id="main-image">
+            <div id="youtube-video-container" style="display: none;"></div>
+            <button id="play-button">▶</button>
         </div>
 
         <!-- 作品信息显示区域 -->
@@ -681,6 +746,15 @@
                     !file.path.includes('/imgs/') // 排除imgs子文件夹
                 );
                 
+                // 获取视频链接文件
+                const videoFile = workFiles.find(file => file.path === folder + '/video.txt');
+                let videoUrl = null;
+                if (videoFile) {
+                    const videoUrlRaw = `https://raw.githubusercontent.com/${owner}/${repo}/main/${videoFile.path}`;
+                    videoUrl = await fetchTextFile(videoUrlRaw);
+                    videoUrl = videoUrl.trim();
+                }
+                
                 let imageUrl = 'img_not_found.png'; // 默认图片
                 if (rootImageFiles.length > 0) {
                     imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${rootImageFiles[0].path}`;
@@ -690,10 +764,98 @@
                 document.getElementById('work-title').textContent = title;
                 document.getElementById('work-description').textContent = description;
                 
-                // 设置首图
+                // 提取YouTube视频ID的函数
+                function extractYouTubeVideoId(url) {
+                    // 移除可能的空白字符
+                    url = url.trim();
+                    let videoId = '';
+                    
+                    // 尝试多种方法提取视频ID
+                    try {
+                        // 方法1：处理标准YouTube URL格式
+                        if (url.includes('youtube.com/watch?v=')) {
+                            const params = new URL(url).searchParams;
+                            videoId = params.get('v');
+                        }
+                        // 方法2：处理缩短URL
+                        else if (url.includes('youtu.be/')) {
+                            videoId = url.split('youtu.be/')[1].split('?')[0];
+                        }
+                        // 方法3：处理嵌入URL
+                        else if (url.includes('youtube.com/embed/')) {
+                            videoId = url.split('youtube.com/embed/')[1].split('?')[0];
+                        }
+                        // 方法4：处理Shorts URL
+                        else if (url.includes('youtube.com/shorts/')) {
+                            videoId = url.split('youtube.com/shorts/')[1].split('?')[0];
+                        }
+                        // 方法5：回退到正则表达式
+                        else {
+                            const youtubeRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|.*?[\?&]v=|.*?[\?&]vi=|shorts\/))([^&"'>?\s]+)/i;
+                            const match = url.match(youtubeRegex);
+                            if (match && match[1]) {
+                                videoId = match[1];
+                            }
+                        }
+                        
+                        // 确保视频ID是11个字符（标准YouTube视频ID长度）
+                        if (videoId && videoId.length === 11) {
+                            return videoId;
+                        }
+                    } catch (e) {
+                        console.error('视频ID提取出错:', e);
+                    }
+                    
+                    return null;
+                }
+                
+                // 设置首图或内嵌视频
                 const mainImage = document.getElementById('main-image');
-                // 使用data-src实现懒加载
-                mainImage.setAttribute('data-src', imageUrl);
+                const youtubeContainer = document.getElementById('youtube-video-container');
+                const playButton = document.getElementById('play-button');
+                
+                // 检查是否有视频URL
+                if (videoUrl) {
+                    const videoId = extractYouTubeVideoId(videoUrl);
+                    
+                    if (videoId) {
+                        // 有YouTube视频，显示内嵌视频
+                        youtubeContainer.style.display = 'block';
+                        mainImage.style.display = 'none';
+                        playButton.style.display = 'none';
+                        
+                        // 创建YouTube iframe
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+                        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+                        iframe.allowFullscreen = true;
+                        
+                        // 添加YouTube要求的referrer策略
+                        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+                        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+                        
+                        // 添加错误处理
+                        iframe.onerror = function() {
+                            console.error('YouTube视频加载失败，回退到图片模式');
+                            // 加载失败时回退到图片显示
+                            youtubeContainer.style.display = 'none';
+                            mainImage.style.display = 'block';
+                            playButton.style.display = 'block';
+                            
+                            // 恢复图片显示
+                            mainImage.setAttribute('data-src', imageUrl);
+                        };
+                        
+                        youtubeContainer.innerHTML = '';
+                        youtubeContainer.appendChild(iframe);
+                    } else {
+                        // 不是YouTube视频，只显示图片
+                        mainImage.setAttribute('data-src', imageUrl);
+                    }
+                } else {
+                    // 没有视频，只显示图片
+                    mainImage.setAttribute('data-src', imageUrl);
+                }
                 
                 // 添加加载完成和错误处理
                 mainImage.onload = function() {
