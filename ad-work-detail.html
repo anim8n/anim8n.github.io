@@ -863,6 +863,9 @@
                     };
                 }
                 
+                // 定义滚动距离（图片宽度+间距）
+                const scrollAmount = 320;
+                
                 // 初始化Intersection Observer用于懒加载
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
@@ -949,7 +952,6 @@
                     // 实现箭头滚动功能
                     const artStillPrevArrow = document.getElementById('art-still-prev-arrow');
                     const artStillNextArrow = document.getElementById('art-still-next-arrow');
-                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
 
                     artStillPrevArrow.addEventListener('click', () => {
                         artStillScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
@@ -968,19 +970,35 @@
                 }
 
                 // 获取并显示Character Design图片
-                const characterFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/characters/') && 
-                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                // 直接获取当前文件夹下的所有图片文件，不依赖于固定路径
+                let charactersFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 排除已经在Art Still中使用的图片
+                    !file.path.includes('/imgs/art still/') &&
+                    // 只显示Character Design相关的图片
+                    (file.path.toLowerCase().includes('character') || 
+                     file.path.toLowerCase().includes('char') ||
+                     file.path.toLowerCase().includes('人物') ||
+                     file.path.toLowerCase().includes('角色'))
                 );
+                
+                // 如果没有找到相关图片，显示当前文件夹下的所有剩余图片
+                if (charactersFiles.length === 0) {
+                    charactersFiles = workFiles.filter(file => 
+                        (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                        // 排除已经在Art Still中使用的图片
+                        !file.path.includes('/imgs/art still/')
+                    );
+                }
 
                 const charactersScroll = document.getElementById('characters-scroll');
                 charactersScroll.innerHTML = ''; // 清空现有内容
 
-                if (characterFiles.length > 0) {
+                if (charactersFiles.length > 0) {
                     // 显示Character Design区域
                     document.getElementById('characters-section').style.display = 'block';
                     
-                    characterFiles.forEach(file => {
+                    charactersFiles.forEach(file => {
                         const img = document.createElement('img');
                         img.className = 'animatic-image';
                         // 使用data-src实现懒加载
