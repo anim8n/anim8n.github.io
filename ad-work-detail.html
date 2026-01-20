@@ -359,13 +359,30 @@
             transform: scale(1.02);
         }
         
-        /* 确保Colorkey区域的图片大小与Animatic区域一致 */
-        #colorkey-scroll img {
-            width: 300px;
-            min-width: 300px;
-            max-width: 300px;
+        /* Colorkey展示区域样式 */
+        #colorkey-container {
+            width: 100%;
+            padding: 0 60px;
+            box-sizing: border-box;
+        }
+        
+        #colorkey-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .colorkey-image {
+            width: 100%;
             height: auto;
             object-fit: cover;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .colorkey-image:hover {
+            transform: scale(1.02);
         }
         
         /* 确保Background Art区域的图片大小与Animatic区域一致 */
@@ -634,7 +651,7 @@
 
         <!-- Color Script展示区域 -->
         <div id="color-script-section" style="display: none;">
-            <h3 id="color-script-title">Colorkey</h3>
+            <h3 id="color-script-title">Color Script</h3>
             <div id="color-script-container">
                 <div id="color-script-grid"></div>
             </div>
@@ -642,11 +659,9 @@
         
         <!-- Colorkey展示区域 -->
         <div id="colorkey-section" style="display: none;">
-            <h3 id="colorkey-title">Color Script</h3>
+            <h3 id="colorkey-title">Colorkey</h3>
             <div id="colorkey-container">
-                <button id="colorkey-prev-arrow" class="scroll-arrow">&lt;</button>
-                <div id="colorkey-scroll"></div>
-                <button id="colorkey-next-arrow" class="scroll-arrow">&gt;</button>
+                <div id="colorkey-grid"></div>
             </div>
         </div>
 
@@ -1225,17 +1240,19 @@
                 }
 
                 // 获取并显示Color Script图片
-                // 只匹配imgs/文件夹中包含color或script或色彩关键词的子文件夹
+                // 只匹配imgs/文件夹中包含'color script'或类似完整关键词组合的子文件夹
                 let colorScriptFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含color或script或色彩关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('script') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('脚本'))
+                    // 只匹配包含'color script'或类似完整关键词组合的文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color script') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour script') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color-script') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour-script') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩脚本') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color script') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour script'))
                 );
 
                 const colorScriptGrid = document.getElementById('color-script-grid');
@@ -1283,20 +1300,23 @@
                 }
 
                 // 获取并显示Colorkey图片
-                // 只匹配imgs/文件夹中包含key或colorkey关键词的子文件夹
+                // 只匹配imgs/文件夹中包含'colorkey'或类似完整关键词组合的子文件夹
                 let colorkeyFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含key或colorkey关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('key') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colorkey') ||
+                    // 只匹配包含'colorkey'或类似完整关键词组合的文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colorkey') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color key') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour key') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color-key') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour-key') ||
                      file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色键') ||
                      file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩键'))
                 );
 
-                const colorkeyScroll = document.getElementById('colorkey-scroll');
-                colorkeyScroll.innerHTML = ''; // 清空现有内容
+                const colorkeyGrid = document.getElementById('colorkey-grid');
+                colorkeyGrid.innerHTML = ''; // 清空现有内容
 
                 if (colorkeyFiles.length > 0) {
                     // 显示Colorkey区域
@@ -1304,7 +1324,7 @@
                     
                     colorkeyFiles.forEach(file => {
                         const img = document.createElement('img');
-                        img.className = 'animatic-image';
+                        img.className = 'colorkey-image';
                         // 使用data-src实现懒加载
                         img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
                         img.alt = `Colorkey image`;
@@ -1328,19 +1348,7 @@
                             this.style.opacity = '1';
                         };
                         
-                        colorkeyScroll.appendChild(img);
-                    });
-
-                    // 实现箭头滚动功能
-                    const colorkeyPrevArrow = document.getElementById('colorkey-prev-arrow');
-                    const colorkeyNextArrow = document.getElementById('colorkey-next-arrow');
-
-                    colorkeyPrevArrow.addEventListener('click', () => {
-                        colorkeyScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                    });
-
-                    colorkeyNextArrow.addEventListener('click', () => {
-                        colorkeyScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                        colorkeyGrid.appendChild(img);
                     });
 
                     // 观察Colorkey区域，实现区域内图片并行加载
