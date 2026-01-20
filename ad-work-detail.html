@@ -1033,16 +1033,18 @@
                 observer.observe(mainImage);
                 
                 // 获取并显示Art Still图片
-                // 只匹配imgs/文件夹中包含art或still关键词的子文件夹
+                // 只匹配imgs/文件夹中特定的art still文件夹
                 const artStillFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含art或still关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('art') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('still') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('艺术') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('作品'))
+                    // 只匹配明确的art still或类似名称的文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'art still' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'art' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'still' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '艺术' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '作品' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'artwork')
                 );
 
                 const artStillScroll = document.getElementById('art-still-scroll');
@@ -1102,16 +1104,18 @@
                 }
 
                 // 获取并显示Character Design图片
-                // 只匹配imgs/文件夹中包含character或char或角色关键词的子文件夹
+                // 只匹配imgs/文件夹中特定的character设计文件夹
                 let charactersFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含character或char或角色关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('character') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('char') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('人物') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('角色'))
+                    // 只匹配明确的character或角色相关文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'character' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'characters' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'char' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '人物' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '角色' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'character design')
                 );
 
                 const charactersScroll = document.getElementById('characters-scroll');
@@ -1171,16 +1175,18 @@
                 }
 
                 // 获取并显示Layout图片
-                // 只匹配imgs/文件夹中包含layout或scene或场景关键词的子文件夹
+                // 只匹配imgs/文件夹中特定的layout文件夹
                 let layoutFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含layout或scene或场景关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('layout') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('scene') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('场景') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('布局'))
+                    // 只匹配明确的layout或场景相关文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'layout' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'layouts' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'scene' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'scenes' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '场景' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '布局')
                 );
 
                 const layoutScroll = document.getElementById('layout-scroll');
@@ -1240,19 +1246,19 @@
                 }
 
                 // 获取并显示Color Script图片
-                // 只匹配imgs/文件夹中包含'color script'或类似完整关键词组合的子文件夹
+                // 只匹配imgs/文件夹中特定的color script文件夹
                 let colorScriptFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 只匹配包含'color script'或类似完整关键词组合的文件夹
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color script') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour script') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color-script') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour-script') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩脚本') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color script') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour script'))
+                    // 只匹配明确的color script相关文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'color script' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colour script' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'color-script' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colour-script' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '色彩脚本' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'color script' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colour script')
                 );
 
                 const colorScriptGrid = document.getElementById('color-script-grid');
@@ -1300,19 +1306,19 @@
                 }
 
                 // 获取并显示Colorkey图片
-                // 只匹配imgs/文件夹中包含'colorkey'或类似完整关键词组合的子文件夹
+                // 只匹配imgs/文件夹中特定的colorkey文件夹
                 let colorkeyFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 只匹配包含'colorkey'或类似完整关键词组合的文件夹
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colorkey') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color key') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour key') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color-key') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour-key') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色键') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩键'))
+                    // 只匹配明确的colorkey相关文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colorkey' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'color key' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colour key' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'color-key' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'colour-key' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '色键' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '色彩键')
                 );
 
                 const colorkeyGrid = document.getElementById('colorkey-grid');
@@ -1360,16 +1366,18 @@
                 }
 
                 // 获取并显示Background Art图片
-                // 只匹配imgs/文件夹中包含background或bg或背景关键词的子文件夹
+                // 只匹配imgs/文件夹中特定的background art文件夹
                 let backgroundArtFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
                     // 必须在imgs/文件夹下
                     file.path.toLowerCase().includes('/imgs/') &&
-                    // 匹配文件夹名称包含background或bg或背景关键词
-                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('background') || 
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('bg') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('背景') ||
-                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('环境'))
+                    // 只匹配明确的background或背景相关文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'background' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'bg' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '背景' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '环境' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'background art' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'bg art')
                 );
 
                 const backgroundArtScroll = document.getElementById('background-art-scroll');
