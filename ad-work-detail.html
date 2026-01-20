@@ -243,14 +243,16 @@
         #characters-section,
         #layout-section,
         #colorkey-section,
-        #art-still-section {
+        #art-still-section,
+        #background-art-section {
             padding: 40px 0;
         }
 
         #characters-title,
         #layout-title,
         #colorkey-title,
-        #art-still-title {
+        #art-still-title,
+        #background-art-title {
             font-size: 24px;
             font-weight: 400;
             margin-bottom: 20px;
@@ -262,7 +264,8 @@
         #characters-container,
         #layout-container,
         #colorkey-container,
-        #art-still-container {
+        #art-still-container,
+        #background-art-container {
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -273,7 +276,8 @@
         #characters-scroll,
         #layout-scroll,
         #colorkey-scroll,
-        #art-still-scroll {
+        #art-still-scroll,
+        #background-art-scroll {
             display: flex;
             gap: 20px;
             overflow-x: auto;
@@ -286,7 +290,8 @@
         #characters-scroll::-webkit-scrollbar,
         #layout-scroll::-webkit-scrollbar,
         #colorkey-scroll::-webkit-scrollbar,
-        #art-still-scroll::-webkit-scrollbar {
+        #art-still-scroll::-webkit-scrollbar,
+        #background-art-scroll::-webkit-scrollbar {
             display: none; /* Chrome, Safari, Opera */
         }
 
@@ -303,6 +308,73 @@
 
         .animatic-image:hover {
             transform: scale(1.05);
+        }
+        
+        /* 确保Layout区域的图片大小与Animatic区域一致 */
+        #layout-scroll img {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        /* Color Script展示区域样式 */
+        #color-script-section {
+            padding: 40px 0;
+            background-color: #222222;
+        }
+        
+        #color-script-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            padding: 0 60px;
+            color: #a6a4ff;
+        }
+        
+        #color-script-container {
+            width: 100%;
+            padding: 0 60px;
+            box-sizing: border-box;
+        }
+        
+        #color-script-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .color-script-image {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .color-script-image:hover {
+            transform: scale(1.02);
+        }
+        
+        /* 确保Colorkey区域的图片大小与Animatic区域一致 */
+        #colorkey-scroll img {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+        }
+        
+        /* 确保Background Art区域的图片大小与Animatic区域一致 */
+        #background-art-scroll img {
+            width: 300px;
+            min-width: 300px;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
         }
 
         /* 滚动箭头样式 */
@@ -547,6 +619,44 @@
                 <button id="characters-prev-arrow" class="scroll-arrow">&lt;</button>
                 <div id="characters-scroll"></div>
                 <button id="characters-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+        
+        <!-- Layout展示区域 -->
+        <div id="layout-section" style="display: none;">
+            <h3 id="layout-title">Layout</h3>
+            <div id="layout-container">
+                <button id="layout-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="layout-scroll"></div>
+                <button id="layout-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+
+        <!-- Color Script展示区域 -->
+        <div id="color-script-section" style="display: none;">
+            <h3 id="color-script-title">Colorkey</h3>
+            <div id="color-script-container">
+                <div id="color-script-grid"></div>
+            </div>
+        </div>
+        
+        <!-- Colorkey展示区域 -->
+        <div id="colorkey-section" style="display: none;">
+            <h3 id="colorkey-title">Color Script</h3>
+            <div id="colorkey-container">
+                <button id="colorkey-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="colorkey-scroll"></div>
+                <button id="colorkey-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+
+        <!-- Background Art展示区域 -->
+        <div id="background-art-section" style="display: none;">
+            <h3 id="background-art-title">Background Art</h3>
+            <div id="background-art-container">
+                <button id="background-art-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="background-art-scroll"></div>
+                <button id="background-art-next-arrow" class="scroll-arrow">&gt;</button>
             </div>
         </div>
 
@@ -908,9 +1018,16 @@
                 observer.observe(mainImage);
                 
                 // 获取并显示Art Still图片
+                // 只匹配imgs/文件夹中包含art或still关键词的子文件夹
                 const artStillFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/art still/') && 
-                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含art或still关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('art') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('still') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('艺术') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('作品'))
                 );
 
                 const artStillScroll = document.getElementById('art-still-scroll');
@@ -970,26 +1087,17 @@
                 }
 
                 // 获取并显示Character Design图片
-                // 直接获取当前文件夹下的所有图片文件，不依赖于固定路径
+                // 只匹配imgs/文件夹中包含character或char或角色关键词的子文件夹
                 let charactersFiles = workFiles.filter(file => 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
-                    // 排除已经在Art Still中使用的图片
-                    !file.path.includes('/imgs/art still/') &&
-                    // 只显示Character Design相关的图片
-                    (file.path.toLowerCase().includes('character') || 
-                     file.path.toLowerCase().includes('char') ||
-                     file.path.toLowerCase().includes('人物') ||
-                     file.path.toLowerCase().includes('角色'))
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含character或char或角色关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('character') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('char') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('人物') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('角色'))
                 );
-                
-                // 如果没有找到相关图片，显示当前文件夹下的所有剩余图片
-                if (charactersFiles.length === 0) {
-                    charactersFiles = workFiles.filter(file => 
-                        (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
-                        // 排除已经在Art Still中使用的图片
-                        !file.path.includes('/imgs/art still/')
-                    );
-                }
 
                 const charactersScroll = document.getElementById('characters-scroll');
                 charactersScroll.innerHTML = ''; // 清空现有内容
@@ -1045,6 +1153,271 @@
                 } else {
                     // 如果没有Character Design图片，隐藏整个Character Design区域
                     document.getElementById('characters-section').style.display = 'none';
+                }
+
+                // 获取并显示Layout图片
+                // 只匹配imgs/文件夹中包含layout或scene或场景关键词的子文件夹
+                let layoutFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含layout或scene或场景关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('layout') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('scene') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('场景') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('布局'))
+                );
+
+                const layoutScroll = document.getElementById('layout-scroll');
+                layoutScroll.innerHTML = ''; // 清空现有内容
+
+                if (layoutFiles.length > 0) {
+                    // 显示Layout区域
+                    document.getElementById('layout-section').style.display = 'block';
+                    
+                    layoutFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Layout image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        layoutScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const layoutPrevArrow = document.getElementById('layout-prev-arrow');
+                    const layoutNextArrow = document.getElementById('layout-next-arrow');
+
+                    layoutPrevArrow.addEventListener('click', () => {
+                        layoutScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    layoutNextArrow.addEventListener('click', () => {
+                        layoutScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Layout区域，实现区域内图片并行加载
+                    const layoutSection = document.getElementById('layout-section');
+                    observer.observe(layoutSection);
+                } else {
+                    // 如果没有Layout图片，隐藏整个Layout区域
+                    document.getElementById('layout-section').style.display = 'none';
+                }
+
+                // 获取并显示Color Script图片
+                // 只匹配imgs/文件夹中包含color或script或色彩关键词的子文件夹
+                let colorScriptFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含color或script或色彩关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('color') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colour') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('script') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('脚本'))
+                );
+
+                const colorScriptGrid = document.getElementById('color-script-grid');
+                colorScriptGrid.innerHTML = ''; // 清空现有内容
+
+                if (colorScriptFiles.length > 0) {
+                    // 显示Color Script区域
+                    document.getElementById('color-script-section').style.display = 'block';
+                    
+                    colorScriptFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'color-script-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Color Script image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        colorScriptGrid.appendChild(img);
+                    });
+
+                    // 观察Color Script区域，实现区域内图片并行加载
+                    const colorScriptSection = document.getElementById('color-script-section');
+                    observer.observe(colorScriptSection);
+                } else {
+                    // 如果没有Color Script图片，隐藏整个Color Script区域
+                    document.getElementById('color-script-section').style.display = 'none';
+                }
+
+                // 获取并显示Colorkey图片
+                // 只匹配imgs/文件夹中包含key或colorkey关键词的子文件夹
+                let colorkeyFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含key或colorkey关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('key') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('colorkey') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色键') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('色彩键'))
+                );
+
+                const colorkeyScroll = document.getElementById('colorkey-scroll');
+                colorkeyScroll.innerHTML = ''; // 清空现有内容
+
+                if (colorkeyFiles.length > 0) {
+                    // 显示Colorkey区域
+                    document.getElementById('colorkey-section').style.display = 'block';
+                    
+                    colorkeyFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Colorkey image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        colorkeyScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const colorkeyPrevArrow = document.getElementById('colorkey-prev-arrow');
+                    const colorkeyNextArrow = document.getElementById('colorkey-next-arrow');
+
+                    colorkeyPrevArrow.addEventListener('click', () => {
+                        colorkeyScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    colorkeyNextArrow.addEventListener('click', () => {
+                        colorkeyScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Colorkey区域，实现区域内图片并行加载
+                    const colorkeySection = document.getElementById('colorkey-section');
+                    observer.observe(colorkeySection);
+                } else {
+                    // 如果没有Colorkey图片，隐藏整个Colorkey区域
+                    document.getElementById('colorkey-section').style.display = 'none';
+                }
+
+                // 获取并显示Background Art图片
+                // 只匹配imgs/文件夹中包含background或bg或背景关键词的子文件夹
+                let backgroundArtFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 匹配文件夹名称包含background或bg或背景关键词
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('background') || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('bg') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('背景') ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('环境'))
+                );
+
+                const backgroundArtScroll = document.getElementById('background-art-scroll');
+                backgroundArtScroll.innerHTML = ''; // 清空现有内容
+
+                if (backgroundArtFiles.length > 0) {
+                    // 显示Background Art区域
+                    document.getElementById('background-art-section').style.display = 'block';
+                    
+                    backgroundArtFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Background Art image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        backgroundArtScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const backgroundArtPrevArrow = document.getElementById('background-art-prev-arrow');
+                    const backgroundArtNextArrow = document.getElementById('background-art-next-arrow');
+
+                    backgroundArtPrevArrow.addEventListener('click', () => {
+                        backgroundArtScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    backgroundArtNextArrow.addEventListener('click', () => {
+                        backgroundArtScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Background Art区域，实现区域内图片并行加载
+                    const backgroundArtSection = document.getElementById('background-art-section');
+                    observer.observe(backgroundArtSection);
+                } else {
+                    // 如果没有Background Art图片，隐藏整个Background Art区域
+                    document.getElementById('background-art-section').style.display = 'none';
                 }
                 
             } catch (error) {
