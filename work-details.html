@@ -302,16 +302,20 @@
             text-align-last: left;
         }
 
-        /* Character Design、Layout、Colorkey展示区域样式 */
+        /* Character Design、Layout、Colorkey、Art Still、Prop Design展示区域样式 */
         #characters-section,
         #layout-section,
-        #colorkey-section {
+        #colorkey-section,
+        #art-still-section,
+        #prop-design-section {
             padding: 40px 0;
         }
 
         #characters-title,
         #layout-title,
-        #colorkey-title {
+        #colorkey-title,
+        #art-still-title,
+        #prop-design-title {
             font-size: 24px;
             font-weight: 400;
             margin-bottom: 20px;
@@ -322,7 +326,9 @@
 
         #characters-container,
         #layout-container,
-        #colorkey-container {
+        #colorkey-container,
+        #art-still-container,
+        #prop-design-container {
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -332,7 +338,9 @@
 
         #characters-scroll,
         #layout-scroll,
-        #colorkey-scroll {
+        #colorkey-scroll,
+        #art-still-scroll,
+        #prop-design-scroll {
             display: flex;
             gap: 20px;
             overflow-x: auto;
@@ -344,7 +352,9 @@
 
         #characters-scroll::-webkit-scrollbar,
         #layout-scroll::-webkit-scrollbar,
-        #colorkey-scroll::-webkit-scrollbar {
+        #colorkey-scroll::-webkit-scrollbar,
+        #art-still-scroll::-webkit-scrollbar,
+        #prop-design-scroll::-webkit-scrollbar {
             display: none; /* Chrome, Safari, Opera */
         }
 
@@ -390,7 +400,9 @@
         #animatic-prev-arrow,
         #characters-prev-arrow,
         #layout-prev-arrow,
-        #colorkey-prev-arrow {
+        #colorkey-prev-arrow,
+        #art-still-prev-arrow,
+        #prop-design-prev-arrow {
             left: 0;
         }
 
@@ -398,7 +410,9 @@
         #animatic-next-arrow,
         #characters-next-arrow,
         #layout-next-arrow,
-        #colorkey-next-arrow {
+        #colorkey-next-arrow,
+        #art-still-next-arrow,
+        #prop-design-next-arrow {
             right: 0;
         }
 
@@ -576,6 +590,16 @@
             <p id="work-description"></p>
         </div>
 
+        <!-- Art Still展示区域 -->
+        <div id="art-still-section" style="display: none;">
+            <h3 id="art-still-title">Art Still</h3>
+            <div id="art-still-container">
+                <button id="art-still-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="art-still-scroll"></div>
+                <button id="art-still-next-arrow" class="scroll-arrow">&gt;</button>
+            </div>
+        </div>
+
         <!-- Character Design展示区域 -->
         <div id="characters-section" style="display: none;">
             <h3 id="characters-title">Character Design</h3>
@@ -586,14 +610,16 @@
             </div>
         </div>
 
-        <!-- Color Script展示区域 -->
-        <div id="color-script-section" style="display: none;">
-            <h3 id="color-script-title">Colorkey</h3>
-            <div id="color-script-container">
-                <div id="color-script-grid"></div>
+        <!-- Prop Design展示区域 -->
+        <div id="prop-design-section" style="display: none;">
+            <h3 id="prop-design-title">Prop Design</h3>
+            <div id="prop-design-container">
+                <button id="prop-design-prev-arrow" class="scroll-arrow">&lt;</button>
+                <div id="prop-design-scroll"></div>
+                <button id="prop-design-next-arrow" class="scroll-arrow">&gt;</button>
             </div>
         </div>
-        
+
         <!-- Layout展示区域 -->
         <div id="layout-section" style="display: none;">
             <h3 id="layout-title">Layout</h3>
@@ -603,7 +629,15 @@
                 <button id="layout-next-arrow" class="scroll-arrow">&gt;</button>
             </div>
         </div>
-        
+
+        <!-- Color Script展示区域 -->
+        <div id="color-script-section" style="display: none;">
+            <h3 id="color-script-title">Colorkey</h3>
+            <div id="color-script-container">
+                <div id="color-script-grid"></div>
+            </div>
+        </div>
+
         <!-- Colorkey展示区域 -->
         <div id="colorkey-section" style="display: none;">
             <h3 id="colorkey-title">Color Script</h3>
@@ -622,16 +656,16 @@
                 Join us&emsp;hello@animoon.studio
             </div>
             <div class="footer-right">
-                <a href="http://www.baidu.com" target="_blank" title="LinkedIn">
+                <a href="https://www.linkedin.com/company/animoon" target="_blank" title="LinkedIn">
                     <img src="跳转图标/linkin.png" alt="LinkedIn">
                 </a>
-                <a href="http://www.baidu.com" target="_blank" title="小红书">
+                <a href="https://www.xiaohongshu.com/user/profile/65f04c29000000000b032c4f?xsec_token=YBO9eicZW3j8axk0PtThG-eLzpA2nJZesUk_ysgyPGljs=&xsec_source=app_share&xhsshare=CopyLink&shareRedId=ODtIMDdINkI2NzUyOTgwNjZFOTo2SDpP&apptime=1768987162&share_id=788a15547d1847ab933d7159de83d91b" target="_blank" title="小红书">
                     <img src="跳转图标/red note.png" alt="小红书">
                 </a>
-                <a href="http://www.baidu.com" target="_blank" title="微信">
-                    <img src="跳转图标/v.png" alt="微信">
+                <a href="https://vimeo.com/animoon" target="_blank" title="Vimeo">
+                    <img src="跳转图标/v.png" alt="Vimeo">
                 </a>
-                <a href="http://www.baidu.com" target="_blank" title="Instagram">
+                <a href="https://www.instagram.com/studioanim8n?igsh=MTdvcDB1cmNnNW5mMg==" target="_blank" title="Instagram">
                     <img src="跳转图标/ins.png" alt="Instagram">
                 </a>
             </div>
@@ -908,8 +942,12 @@
                 observer.observe(mainImage);
                 
                 // 获取并显示Character Design图片
+                // 识别含有"character design"的路径，以及原有的"/imgs/characters/"路径
                 const charactersFiles = workFiles.filter(file => 
-                    file.path.includes('/imgs/characters/') && 
+                    ((file.path.toLowerCase().includes('/imgs/') &&
+                      file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('character') &&
+                      file.path.toLowerCase().split('/imgs/')[1].split('/')[0].includes('design')) ||
+                     file.path.includes('/imgs/characters/')) && 
                     (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png'))
                 );
 
@@ -1144,6 +1182,149 @@
                 } else {
                     // 如果没有Colorkey图片，隐藏整个Colorkey区域
                     document.getElementById('colorkey-section').style.display = 'none';
+                }
+
+                // 获取并显示Art Still图片
+                // 只匹配imgs/文件夹中特定的art still文件夹
+                const artStillFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 只匹配明确的art still或类似名称的文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'art still' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'art' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'still' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '艺术' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '作品' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'artwork')
+                );
+
+                const artStillScroll = document.getElementById('art-still-scroll');
+                artStillScroll.innerHTML = ''; // 清空现有内容
+
+                if (artStillFiles.length > 0) {
+                    // 显示Art Still区域
+                    document.getElementById('art-still-section').style.display = 'block';
+                    
+                    artStillFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Art Still image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        artStillScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const artStillPrevArrow = document.getElementById('art-still-prev-arrow');
+                    const artStillNextArrow = document.getElementById('art-still-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    artStillPrevArrow.addEventListener('click', () => {
+                        artStillScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    artStillNextArrow.addEventListener('click', () => {
+                        artStillScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Art Still区域，实现区域内图片并行加载
+                    const artStillSection = document.getElementById('art-still-section');
+                    observer.observe(artStillSection);
+                } else {
+                    // 如果没有Art Still图片，隐藏整个Art Still区域
+                    document.getElementById('art-still-section').style.display = 'none';
+                }
+
+                // 获取并显示Prop Design图片
+                // 只匹配imgs/文件夹中特定的prop design文件夹
+                const propDesignFiles = workFiles.filter(file => 
+                    (file.path.endsWith('.jpg') || file.path.endsWith('.jpeg') || file.path.endsWith('.png')) &&
+                    // 必须在imgs/文件夹下
+                    file.path.toLowerCase().includes('/imgs/') &&
+                    // 只匹配明确的prop design或类似名称的文件夹
+                    (file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'prop design' || 
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'prop' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === 'props' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '道具' ||
+                     file.path.toLowerCase().split('/imgs/')[1].split('/')[0] === '道具设计')
+                );
+
+                const propDesignScroll = document.getElementById('prop-design-scroll');
+                propDesignScroll.innerHTML = ''; // 清空现有内容
+
+                if (propDesignFiles.length > 0) {
+                    // 显示Prop Design区域
+                    document.getElementById('prop-design-section').style.display = 'block';
+                    
+                    propDesignFiles.forEach(file => {
+                        const img = document.createElement('img');
+                        img.className = 'animatic-image';
+                        // 使用data-src实现懒加载
+                        img.setAttribute('data-src', `https://raw.githubusercontent.com/${owner}/${repo}/main/${file.path}`);
+                        img.alt = `Prop Design image`;
+                        img.style.opacity = '0';
+                        img.style.transition = 'opacity 0.3s ease-in-out';
+                        
+                        // 添加点击事件，显示悬浮大图
+                        img.addEventListener('click', () => {
+                            const modal = document.getElementById('image-modal');
+                            const modalImg = document.querySelector('.modal-image');
+                            modal.style.display = 'block';
+                            modalImg.src = img.getAttribute('data-src');
+                        });
+                        
+                        // 添加加载完成和错误处理
+                        img.onload = function() {
+                            this.style.opacity = '1';
+                        };
+                        img.onerror = function() {
+                            this.src = 'img_not_found.png';
+                            this.style.opacity = '1';
+                        };
+                        
+                        propDesignScroll.appendChild(img);
+                    });
+
+                    // 实现箭头滚动功能
+                    const propDesignPrevArrow = document.getElementById('prop-design-prev-arrow');
+                    const propDesignNextArrow = document.getElementById('prop-design-next-arrow');
+                    const scrollAmount = 320; // 滚动距离（图片宽度+间距）
+
+                    propDesignPrevArrow.addEventListener('click', () => {
+                        propDesignScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                    });
+
+                    propDesignNextArrow.addEventListener('click', () => {
+                        propDesignScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                    });
+
+                    // 观察Prop Design区域，实现区域内图片并行加载
+                    const propDesignSection = document.getElementById('prop-design-section');
+                    observer.observe(propDesignSection);
+                } else {
+                    // 如果没有Prop Design图片，隐藏整个Prop Design区域
+                    document.getElementById('prop-design-section').style.display = 'none';
                 }
             } catch (error) {
                 console.error('加载作品详情失败:', error);
