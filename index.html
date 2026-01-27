@@ -386,8 +386,42 @@
                 return files;
             }
 
+            // 从GitHub获取video.txt文件内容
+            async function fetchVideoLink() {
+                try {
+                    // GitHub仓库信息
+                    const owner = 'anim8n';
+                    const repo = 'portfolio';
+                    const path = 'video.txt';
+                    const token = getGitHubToken();
+                    
+                    // 构建API URL
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+                    const headers = {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    };
+                    
+                    // 发送请求
+                    const response = await fetch(apiUrl, { headers });
+                    if (!response.ok) {
+                        throw new Error(`获取video.txt失败: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    // 解析响应
+                    const data = await response.json();
+                    // 解码base64内容
+                    const content = atob(data.content.replace(/\s/g, ''));
+                    return content.trim();
+                } catch (error) {
+                    console.error('获取视频链接失败:', error);
+                    // 如果获取失败，返回默认视频链接
+                    return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                }
+            }
+
             // 初始化视频
-            function initVideo() {
+            async function initVideo() {
                 const worksContainer = document.getElementById('worksContainer');
                 worksContainer.innerHTML = '';
 
@@ -405,6 +439,110 @@
                     videoContainer.style.opacity = '1';
                 }, 100);
                 
+                try {
+                    // 从GitHub获取视频链接
+                    const youtubeLink = await fetchVideoLink();
+                    
+                    // 提取YouTube视频ID
+                    let videoId = '';
+                    if (youtubeLink.includes('youtu.be/')) {
+                        videoId = youtubeLink.split('youtu.be/')[1].split('?')[0];
+                    } else if (youtubeLink.includes('watch?v=')) {
+                        videoId = youtubeLink.split('watch?v=')[1].split('&')[0];
+                    }
+                    
+                    if (videoId) {
+                        // 创建YouTube嵌入iframe
+                        const iframe = document.createElement('iframe');
+                        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=0&loop=1&playlist=${videoId}&controls=0&mute=0`;
+                        iframe.style.width = '100%';
+                        iframe.style.height = '100%';
+                        iframe.style.border = 'none';
+                        iframe.style.objectFit = 'cover';
+                        iframe.setAttribute('allowfullscreen', 'true');
+                        iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+                        
+                        // 添加iframe到容器
+                        videoContainer.appendChild(iframe);
+                        
+                        // 创建播放/暂停按钮
+                        const playBtn = document.createElement('button');
+                        playBtn.innerHTML = '▶'; // 初始显示播放图标
+                        playBtn.style.position = 'absolute';
+                        playBtn.style.top = '50%';
+                        playBtn.style.left = '50%';
+                        playBtn.style.transform = 'translate(-50%, -50%)';
+                        playBtn.style.width = '60px'; // 固定宽度
+                        playBtn.style.height = '60px'; // 固定高度
+                        playBtn.style.backgroundColor = 'transparent'; // 去掉背景色
+                        playBtn.style.color = 'white';
+                        playBtn.style.border = 'none'; // 去掉边框
+                        playBtn.style.borderRadius = '0'; // 去掉圆形边框
+                        playBtn.style.cursor = 'pointer';
+                        playBtn.style.fontSize = '50px'; // 缩小图标尺寸
+                        playBtn.style.display = 'flex'; // 使用flex布局
+                        playBtn.style.alignItems = 'center'; // 垂直居中
+                        playBtn.style.justifyContent = 'center'; // 水平居中
+                        playBtn.style.transition = 'opacity 0.5s ease'; // 平滑的透明度过渡
+                        playBtn.style.zIndex = '10';
+                        playBtn.style.fontFamily = 'Arial, sans-serif'; // 使用可靠的字体
+                        playBtn.style.padding = '0'; // 去掉内边距
+                        playBtn.style.margin = '0'; // 去掉外边距
+                        playBtn.style.outline = 'none'; // 去掉聚焦轮廓
+                        playBtn.style.webkitFontSmoothing = 'antialiased'; // 平滑字体
+                        playBtn.style.mozOsxFontSmoothing = 'grayscale'; // 平滑字体
+                        
+                        // 初始设置播放图标位置和尺寸
+                        playBtn.style.paddingLeft = '5px';
+                        playBtn.style.fontSize = '50px';
+                        
+                        // 添加播放/暂停功能（控制YouTube视频）
+                        playBtn.addEventListener('click', () => {
+                            // 向iframe发送消息控制播放/暂停
+                            const message = {
+                                event: 'command',
+                                func: playBtn.innerHTML === '▶' ? 'playVideo' : 'pauseVideo',
+                                args: []
+                            };
+                            iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+                            
+                            if (playBtn.innerHTML === '▶') {
+                                playBtn.innerHTML = '■'; // 播放时显示暂停图标
+                                playBtn.style.fontSize = '60px'; // 增大暂停图标尺寸
+                                playBtn.style.paddingLeft = '0'; // 暂停图标居中
+                                playBtn.style.top = '49%'; // 暂停按钮往上移一点点（比之前稍低）
+                                // 视频播放时，按钮淡出
+                                setTimeout(() => {
+                                    playBtn.style.opacity = '0';
+                                }, 500);
+                            } else {
+                                playBtn.innerHTML = '▶'; // 暂停时显示播放图标
+                                playBtn.style.fontSize = '50px'; // 恢复播放图标尺寸
+                                playBtn.style.paddingLeft = '5px'; // 播放图标微调，使其看起来居中
+                                playBtn.style.top = '50%'; // 播放按钮恢复居中位置
+                                // 视频暂停时，按钮恢复显示
+                                playBtn.style.opacity = '1';
+                            }
+                        });
+                        
+                        // 添加播放/暂停按钮到容器
+                        videoContainer.appendChild(playBtn);
+                    } else {
+                        // 如果没有有效的YouTube链接，使用默认视频
+                        createDefaultVideo(videoContainer);
+                    }
+                } catch (error) {
+                    console.error('初始化视频失败:', error);
+                    // 出错时使用默认视频
+                    createDefaultVideo(videoContainer);
+                }
+                
+                // 添加容器到页面
+                worksContainer.appendChild(videoContainer);
+            }
+
+            // 创建默认视频（本地视频）
+            function createDefaultVideo(container) {
                 // 创建视频元素
                 const video = document.createElement('video');
                 video.src = 'index_video.mp4';
@@ -419,7 +557,7 @@
                 video.setAttribute('playsinline', 'playsinline'); // 内联播放，避免在移动设备上全屏
                 
                 // 添加视频到容器
-                videoContainer.appendChild(video);
+                container.appendChild(video);
                 
                 // 创建声音控制按钮
                 const soundBtn = document.createElement('button');
@@ -452,7 +590,7 @@
                 });
                 
                 // 添加声音按钮到容器
-                videoContainer.appendChild(soundBtn);
+                container.appendChild(soundBtn);
                 
                 // 创建播放/暂停按钮
                 const playBtn = document.createElement('button');
@@ -517,10 +655,7 @@
                 });
                 
                 // 添加播放/暂停按钮到容器
-                videoContainer.appendChild(playBtn);
-                
-                // 添加容器到页面
-                worksContainer.appendChild(videoContainer);
+                container.appendChild(playBtn);
             }
 
             // 展示作品集
