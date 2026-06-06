@@ -471,6 +471,11 @@
                             const titleOverlay = document.createElement('div');
                             titleOverlay.className = 'image-title-overlay';
                             titleOverlay.textContent = work.title || 'Untitled';
+                            // 添加点击跳转功能
+                            titleOverlay.style.cursor = 'pointer';
+                            titleOverlay.addEventListener('click', () => {
+                                window.location.href = `work-details.html?title=${encodeURIComponent(work.title || 'Untitled')}`;
+                            });
                             gridItem.appendChild(titleOverlay);
                         }
                         
@@ -487,6 +492,11 @@
                             const titleOverlay = document.createElement('div');
                             titleOverlay.className = 'image-title-overlay';
                             titleOverlay.textContent = work.title || 'Untitled';
+                            // 添加点击跳转功能
+                            titleOverlay.style.cursor = 'pointer';
+                            titleOverlay.addEventListener('click', () => {
+                                window.location.href = `work-details.html?title=${encodeURIComponent(work.title || 'Untitled')}`;
+                            });
                             gridItem.appendChild(titleOverlay);
                         }
                     }
