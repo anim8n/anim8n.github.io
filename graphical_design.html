@@ -315,15 +315,15 @@
         .item-2 { grid-column: 1; grid-row: 2; height: 12vw; }              /* 第2张图：第二行左边，435 x 233 */
         .item-3 { grid-column: 1; grid-row: 3; grid-row-end: 5; height: 25vw; } /* 第3张图：第三/四行左边（跨2行），435 x 485 */
         
-        /* 第二列（中间）*/
-        .item-4 { grid-column: 2; grid-row: 1; height: 12vw; }              /* 第4张图：第一行中间，435 x 233 */
+        /* 第二、三列（中间）*/
+        .item-4 { grid-column: 2; grid-column-end: 4; grid-row: 1; height: 12vw; } /* 第4张图：第一行中间（跨列2-3），435 x 233 */
         .item-5 { grid-column: 2; grid-row: 2; height: 12vw; }              /* 第5张图：第二行中间左，214 x 233 */
         .item-6 { grid-column: 3; grid-row: 2; height: 12vw; }              /* 第6张图：第二行中间右，214 x 233 */
-        .item-7 { grid-column: 2; grid-row: 3; grid-column-end: 4; height: 12vw; } /* 第7张图：第三行中间（跨2列），438 x 233 */
-        .item-8 { grid-column: 2; grid-row: 4; grid-column-end: 4; height: 12vw; } /* 第8张图：第四行中间（跨2列），438 x 233 */
+        .item-7 { grid-column: 2; grid-column-end: 4; grid-row: 3; height: 12vw; } /* 第7张图：第三行中间（跨列2-3），438 x 233 */
+        .item-8 { grid-column: 2; grid-column-end: 4; grid-row: 4; height: 12vw; } /* 第8张图：第四行中间（跨列2-3），438 x 233 */
         
-        /* 第三列（右边）*/
-        .item-9 { grid-column: 4; grid-row: 1; grid-row-end: 5; height: 37vw; }  /* 第9张图：最右边高图（跨3行），435 x 737 */
+        /* 第四、五列（右边）*/
+        .item-9 { grid-column: 4; grid-column-end: 6; grid-row: 1; grid-row-end: 4; height: 25vw; } /* 第9张图：最右边高图（跨列4-5，跨行1-3），435 x 737 */
         .item-10 { grid-column: 4; grid-row: 4; height: 12vw; }             /* 第10张图：第四行右边左，214 x 233 */
         .item-11 { grid-column: 5; grid-row: 4; height: 12vw; }             /* 第11张图：第四行右边右，214 x 233 */
     </style>
