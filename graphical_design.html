@@ -253,13 +253,14 @@
             margin: 20px 60px;
         }
         
-        /* Graphical Design作品展示网格布局 */
+        /* Graphical Design作品展示网格布局 - 占满屏幕宽度 */
         .graphical-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            gap: 8px;
-            padding: 20px;
-            max-width: 1200px;
+            gap: 0.5vw;
+            padding: 1vw;
+            width: calc(100% - 2vw);
+            max-width: none;
             margin: 0 auto;
         }
         
@@ -282,7 +283,7 @@
         .grid-item.placeholder::before {
             content: attr(data-size);
             color: rgba(255, 255, 255, 0.3);
-            font-size: 12px;
+            font-size: 0.8vw;
             position: absolute;
             top: 50%;
             left: 50%;
@@ -296,30 +297,30 @@
         
         .image-title-overlay {
             position: absolute;
-            top: 10px;
-            left: 15px;
+            top: 1vw;
+            left: 1.5vw;
             color: #fff;
-            font-size: 18px;
+            font-size: 1.5vw;
             font-weight: bold;
             border-bottom: 2px solid #fff;
-            padding-bottom: 5px;
+            padding-bottom: 0.3vw;
             z-index: 10;
             background-color: rgba(0, 0, 0, 0.5);
-            padding: 5px 15px;
+            padding: 0.4vw 1.2vw;
         }
         
-        /* 网格布局定义 - 匹配设计图 */
-        .item-1 { grid-column: span 3; grid-row: span 1; height: 150px; }   /* 485 x 233 - 第一张图带标题 */
-        .item-2 { grid-column: span 3; grid-row: span 1; height: 150px; }   /* 435 x 233 */
-        .item-3 { grid-column: span 6; grid-row: span 3; height: 460px; }   /* 435 x 737 - 最高图 */
-        .item-4 { grid-column: span 3; grid-row: span 1; height: 150px; }   /* 435 x 233 */
-        .item-5 { grid-column: span 1.5; grid-row: span 1; height: 150px; } /* 214 x 233 */
-        .item-6 { grid-column: span 1.5; grid-row: span 1; height: 150px; } /* 214 x 233 */
-        .item-7 { grid-column: span 3; grid-row: span 2; height: 310px; }   /* 435 x 485 - 跨2行 */
-        .item-8 { grid-column: span 3; grid-row: span 1; height: 150px; }   /* 438 x 233 */
-        .item-9 { grid-column: span 3; grid-row: span 1; height: 150px; }   /* 438 x 233 */
-        .item-10 { grid-column: span 1.5; grid-row: span 1; height: 150px; } /* 214 x 233 */
-        .item-11 { grid-column: span 1.5; grid-row: span 1; height: 150px; } /* 214 x 233 */
+        /* 网格布局定义 - 匹配设计图，使用视口单位响应式缩放 */
+        .item-1 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 485 x 233 - 第一张图带标题 */
+        .item-2 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 435 x 233 */
+        .item-3 { grid-column: span 6; grid-row: span 3; height: auto; }    /* 435 x 737 - 最高图，自动高度 */
+        .item-4 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 435 x 233 */
+        .item-5 { grid-column: span 1.5; grid-row: span 1; height: 12vw; }  /* 214 x 233 */
+        .item-6 { grid-column: span 1.5; grid-row: span 1; height: 12vw; }  /* 214 x 233 */
+        .item-7 { grid-column: span 3; grid-row: span 2; height: 25vw; }    /* 435 x 485 - 跨2行 */
+        .item-8 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 438 x 233 */
+        .item-9 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 438 x 233 */
+        .item-10 { grid-column: span 1.5; grid-row: span 1; height: 12vw; } /* 214 x 233 */
+        .item-11 { grid-column: span 1.5; grid-row: span 1; height: 12vw; } /* 214 x 233 */
     </style>
     <!-- 引入Token Manager -->
     <script src="token-manager.js"></script>
