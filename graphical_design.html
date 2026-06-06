@@ -253,10 +253,10 @@
             margin: 20px 60px;
         }
         
-        /* Graphical Design作品展示网格布局 - 占满屏幕宽度 */
+        /* Graphical Design作品展示网格布局 - 占满屏幕宽度，5列布局 */
         .graphical-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 0.5vw;
             padding: 1vw;
             width: calc(100% - 2vw);
@@ -309,18 +309,23 @@
             padding: 0.4vw 1.2vw;
         }
         
-        /* 网格布局定义 - 匹配设计图，使用视口单位响应式缩放 */
-        .item-1 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 485 x 233 - 第一张图带标题 */
-        .item-2 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 435 x 233 */
-        .item-3 { grid-column: span 6; grid-row: span 3; height: auto; }    /* 435 x 737 - 最高图，自动高度 */
-        .item-4 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 435 x 233 */
-        .item-5 { grid-column: span 1.5; grid-row: span 1; height: 12vw; }  /* 214 x 233 */
-        .item-6 { grid-column: span 1.5; grid-row: span 1; height: 12vw; }  /* 214 x 233 */
-        .item-7 { grid-column: span 3; grid-row: span 2; height: 25vw; }    /* 435 x 485 - 跨2行 */
-        .item-8 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 438 x 233 */
-        .item-9 { grid-column: span 3; grid-row: span 1; height: 12vw; }    /* 438 x 233 */
-        .item-10 { grid-column: span 1.5; grid-row: span 1; height: 12vw; } /* 214 x 233 */
-        .item-11 { grid-column: span 1.5; grid-row: span 1; height: 12vw; } /* 214 x 233 */
+        /* 网格布局定义 - 严格匹配设计图 */
+        /* 第一列（左边）*/
+        .item-1 { grid-column: 1; grid-row: 1; height: 12vw; }              /* 第1张图：左上角，485 x 233，带标题 */
+        .item-2 { grid-column: 1; grid-row: 2; height: 12vw; }              /* 第2张图：第二行左边，435 x 233 */
+        .item-3 { grid-column: 1; grid-row: 3; grid-row-end: 5; height: 25vw; } /* 第3张图：第三/四行左边（跨2行），435 x 485 */
+        
+        /* 第二列（中间）*/
+        .item-4 { grid-column: 2; grid-row: 1; height: 12vw; }              /* 第4张图：第一行中间，435 x 233 */
+        .item-5 { grid-column: 2; grid-row: 2; height: 12vw; }              /* 第5张图：第二行中间左，214 x 233 */
+        .item-6 { grid-column: 3; grid-row: 2; height: 12vw; }              /* 第6张图：第二行中间右，214 x 233 */
+        .item-7 { grid-column: 2; grid-row: 3; grid-column-end: 4; height: 12vw; } /* 第7张图：第三行中间（跨2列），438 x 233 */
+        .item-8 { grid-column: 2; grid-row: 4; grid-column-end: 4; height: 12vw; } /* 第8张图：第四行中间（跨2列），438 x 233 */
+        
+        /* 第三列（右边）*/
+        .item-9 { grid-column: 4; grid-row: 1; grid-row-end: 5; height: 37vw; }  /* 第9张图：最右边高图（跨3行），435 x 737 */
+        .item-10 { grid-column: 4; grid-row: 4; height: 12vw; }             /* 第10张图：第四行右边左，214 x 233 */
+        .item-11 { grid-column: 5; grid-row: 4; height: 12vw; }             /* 第11张图：第四行右边右，214 x 233 */
     </style>
     <!-- 引入Token Manager -->
     <script src="token-manager.js"></script>
@@ -416,20 +421,20 @@
                 const gridWrapper = document.createElement('div');
                 gridWrapper.className = 'graphical-grid';
                 
-                // 网格布局定义（根据用户提供的布局图）- 总共11个图片位置
+                // 网格布局定义（根据设计图）- 总共11个图片位置
                 // 网格配置: [网格项类名, 尺寸标注, 是否为第一张图(带标题)]
                 const gridConfig = [
                     { className: 'item-1', size: '485 x 233', isFirst: true },   // 第1张图，左上角，带标题
-                    { className: 'item-2', size: '435 x 233', isFirst: false }, // 第2张图，第一行中间
-                    { className: 'item-4', size: '435 x 233', isFirst: false }, // 第3张图，第二行左边
-                    { className: 'item-5', size: '214 x 233', isFirst: false }, // 第4张图，第二行中间左
-                    { className: 'item-6', size: '214 x 233', isFirst: false }, // 第5张图，第二行中间右
-                    { className: 'item-7', size: '435 x 485', isFirst: false }, // 第6张图，第三/四行左边
-                    { className: 'item-8', size: '438 x 233', isFirst: false }, // 第7张图，第三行中间
-                    { className: 'item-9', size: '438 x 233', isFirst: false }, // 第8张图，第四行中间
-                    { className: 'item-10', size: '214 x 233', isFirst: false }, // 第9张图，第四行右边左
-                    { className: 'item-11', size: '214 x 233', isFirst: false }, // 第10张图，第四行右边右
-                    { className: 'item-3', size: '435 x 737', isFirst: false }, // 第11张图，最右边高图
+                    { className: 'item-2', size: '435 x 233', isFirst: false }, // 第2张图，第二行左边
+                    { className: 'item-3', size: '435 x 485', isFirst: false }, // 第3张图，第三/四行左边（跨2行）
+                    { className: 'item-4', size: '435 x 233', isFirst: false }, // 第4张图，第一行中间
+                    { className: 'item-5', size: '214 x 233', isFirst: false }, // 第5张图，第二行中间左
+                    { className: 'item-6', size: '214 x 233', isFirst: false }, // 第6张图，第二行中间右
+                    { className: 'item-7', size: '438 x 233', isFirst: false }, // 第7张图，第三行中间
+                    { className: 'item-8', size: '438 x 233', isFirst: false }, // 第8张图，第四行中间
+                    { className: 'item-9', size: '435 x 737', isFirst: false }, // 第9张图，最右边高图（跨3行）
+                    { className: 'item-10', size: '214 x 233', isFirst: false }, // 第10张图，第四行右边左
+                    { className: 'item-11', size: '214 x 233', isFirst: false }, // 第11张图，第四行右边右
                 ];
                 
                 // 使用所有画廊图片（共11张）
