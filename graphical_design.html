@@ -564,11 +564,14 @@
                     };
                     
                     // 查找子文件夹中的所有图片（png/jpg/jpeg格式）
-                    const imageFiles = repoData.tree.filter(item => 
-                        item.path.startsWith(`${folder}/`) && 
-                        item.type === 'blob' && 
-                        (item.path.endsWith('.jpg') || item.path.endsWith('.jpeg') || item.path.endsWith('.png'))
-                    );
+                    // 使用更精确的路径匹配，确保只匹配当前文件夹下的图片
+                    const imageFiles = repoData.tree.filter(item => {
+                        if (item.type !== 'blob') return false;
+                        if (!item.path.endsWith('.jpg') && !item.path.endsWith('.jpeg') && !item.path.endsWith('.png')) return false;
+                        // 检查路径是否精确匹配当前文件夹（路径必须以 folder/ 开头，且后面没有额外的 /）
+                        const relativePath = item.path.slice(folder.length + 1);
+                        return item.path.startsWith(folder + '/') && !relativePath.includes('/');
+                    });
                     
                     console.log(`文件夹 ${folder}/ 中的图片:`, imageFiles);
                     
