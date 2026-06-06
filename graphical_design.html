@@ -474,7 +474,7 @@
                             // 添加点击跳转功能
                             titleOverlay.style.cursor = 'pointer';
                             titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?title=${encodeURIComponent(work.title || 'Untitled')}`;
+                                window.location.href = `work-details.html?folder=${encodeURIComponent(work.folder)}`;
                             });
                             gridItem.appendChild(titleOverlay);
                         }
@@ -495,7 +495,7 @@
                             // 添加点击跳转功能
                             titleOverlay.style.cursor = 'pointer';
                             titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?title=${encodeURIComponent(work.title || 'Untitled')}`;
+                                window.location.href = `work-details.html?folder=${encodeURIComponent(work.folder)}`;
                             });
                             gridItem.appendChild(titleOverlay);
                         }
