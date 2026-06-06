@@ -471,10 +471,10 @@
                             const titleOverlay = document.createElement('div');
                             titleOverlay.className = 'image-title-overlay';
                             titleOverlay.textContent = work.title || 'Untitled';
-                            // 添加点击跳转功能
+                            // 添加点击跳转功能 - 使用 feature film 文件夹下的数据
                             titleOverlay.style.cursor = 'pointer';
                             titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?folder=${encodeURIComponent(work.folder)}`;
+                                window.location.href = `work-details.html?folder=${encodeURIComponent('feature film/' + work.title)}`;
                             });
                             gridItem.appendChild(titleOverlay);
                         }
@@ -492,10 +492,10 @@
                             const titleOverlay = document.createElement('div');
                             titleOverlay.className = 'image-title-overlay';
                             titleOverlay.textContent = work.title || 'Untitled';
-                            // 添加点击跳转功能
+                            // 添加点击跳转功能 - 使用 feature film 文件夹下的数据
                             titleOverlay.style.cursor = 'pointer';
                             titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?folder=${encodeURIComponent(work.folder)}`;
+                                window.location.href = `work-details.html?folder=${encodeURIComponent('feature film/' + work.title)}`;
                             });
                             gridItem.appendChild(titleOverlay);
                         }
