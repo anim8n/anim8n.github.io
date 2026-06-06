@@ -562,11 +562,14 @@
                     
                     console.log(`文件夹 ${folder}/ 中的图片:`, imageFiles);
                     
-                    // 将图片按名称排序（确保顺序一致）
+                    // 将图片按数字排序（确保 img1→img2→...→img11 的顺序）
                     const sortedImages = imageFiles.sort((a, b) => {
                         const nameA = a.path.split('/').pop().toLowerCase();
                         const nameB = b.path.split('/').pop().toLowerCase();
-                        return nameA.localeCompare(nameB);
+                        // 提取文件名中的数字进行排序
+                        const numA = parseInt(nameA.match(/\d+/)) || 0;
+                        const numB = parseInt(nameB.match(/\d+/)) || 0;
+                        return numA - numB;
                     });
                     
                     work.galleryImages = sortedImages.map(img => ({
