@@ -235,6 +235,13 @@
             margin: 20px 60px;
             text-align: center;
         }
+
+        @media (max-width: 768px) {
+            .feature-work-media,
+            .feature-work-text {
+                width: 100% !important;
+            }
+        }
     </style>
     <!-- 引入Token Manager -->
     <script src="token-manager.js"></script>
@@ -374,23 +381,23 @@
                     display: flex;
                     flex-direction: column;
                     gap: 18px;
-                    align-items: center;
+                    align-items: flex-start;
                     transition: transform 0.3s ease;
                     cursor: pointer;
                     padding: 20px;
                     background-color: rgba(255, 255, 255, 0.05);
-                    max-width: 989px;
-                    margin: 0 auto;
+                    width: 100%;
+                    box-sizing: border-box;
                 `;
                 workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
                 workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
 
                 // 创建图片容器 - 使用焦点剪裁
                 const imageContainer = document.createElement('div');
+                imageContainer.className = 'feature-work-media';
                 // 设置用户要求的尺寸949px x 383px
                 imageContainer.style.cssText = `
-                    width: 100%;
-                    max-width: 949px;
+                    width: min(75vw, 100%);
                     aspect-ratio: 949 / 383;
                     height: auto;
                     background-color: rgba(255, 255, 255, 0.1);
@@ -439,9 +446,9 @@
 
                 // 创建文本容器（标题和描述）
                 const textContainer = document.createElement('div');
+                textContainer.className = 'feature-work-text';
                 textContainer.style.cssText = `
-                    width: 100%;
-                    max-width: 949px;
+                    width: min(75vw, 100%);
                     line-height: 1.6;
                     display: flex;
                     flex-direction: column;
