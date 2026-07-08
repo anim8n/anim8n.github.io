@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOON - AD</title>
     <link rel="stylesheet" href="fonts/fonts.css">
-    <!-- 引入SmartCrop.js库 -->
-    <script src="https://cdn.jsdelivr.net/npm/smartcrop@2.0.5/smartcrop.min.js"></script>
     <style>
         body {
             font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
@@ -419,64 +417,22 @@
 
                 // 创建图片元素
                 const image = document.createElement('img');
-                // 设置crossOrigin属性以允许跨域图片在canvas中使用
-                image.crossOrigin = 'anonymous';
                 image.style.cssText = `
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
-                    transform: scale(1.1);
-                    transition: transform 0.3s ease;
+                    transition: opacity 0.3s ease;
                 `;
                 
                 // 添加调试信息，显示当前处理的作品
                 console.log('正在处理作品:', work.folder, '标题:', work.title, '图片URL:', work.coverCompressUrl);
 
                 if (work.coverCompressUrl) {
-                    // 设置图片懒加载，初始只设置data-src
-                    image.dataset.src = work.coverCompressUrl;
+                    // 直接使用原始封面图片
+                    image.src = work.coverCompressUrl;
                     image.alt = work.title;
-                    
-                    // 图片加载完成后进行smartcrop裁剪
-                    image.onload = async () => {
-                        // 创建临时canvas用于裁剪
-                        const canvas = document.createElement('canvas');
-                        canvas.style.display = 'none';
-                        document.body.appendChild(canvas);
-                        
-                        try {
-                            // 使用smartcrop分析图片找出最佳裁剪区域
-                            const result = await SmartCrop.crop(image, {
-                                width: 417,
-                                height: 240
-                            });
-                            
-                            // 设置canvas尺寸
-                            canvas.width = 417;
-                            canvas.height = 240;
-                            
-                            // 获取canvas上下文
-                            const ctx = canvas.getContext('2d');
-                            
-                            // 绘制裁剪后的图片
-                            const crop = result.topCrop;
-                            ctx.drawImage(
-                                image,
-                                crop.x, crop.y, crop.width, crop.height,
-                                0, 0, 417, 240
-                            );
-                            
-                            // 将canvas转换为Data URL作为图片源
-                            image.src = canvas.toDataURL('image/jpeg');
-                            image.style.opacity = '1';
-                        } catch (error) {
-                            console.error('图片裁剪出错:', error);
-                            // 如果裁剪失败，保持原始图片并显示
-                            image.style.opacity = '1';
-                        } finally {
-                            // 裁剪完成后移除canvas
-                            document.body.removeChild(canvas);
-                        }
+                    image.onload = () => {
+                        image.style.opacity = '1';
                     };
                     
                     // 图片加载失败时的处理函数，修复重试计数逻辑
@@ -491,7 +447,6 @@
                             // 还有重试次数，继续重试
                             retryCount++;
                             setTimeout(() => {
-                                // 使用原始URL进行重试，而不是依赖已被移除的data-src
                                 image.src = originalImageUrl;
                             }, 500 * retryCount); // 指数退避重试
                         } else {
@@ -504,7 +459,6 @@
                     
                     // 默认隐藏，加载完成后显示
                     image.style.opacity = '0';
-                    image.style.transition = 'opacity 0.3s ease';
                 } else {
                     // 使用用户上传的img_not_found.png作为占位图
                     image.src = 'img_not_found.png';
@@ -568,26 +522,6 @@
                 // 添加到容器中
                 container.appendChild(workItem);
             }
-
-            // 实现图片懒加载
-            const lazyImages = container.querySelectorAll('img[data-src]');
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const image = entry.target;
-                        image.src = image.dataset.src;
-                        image.removeAttribute('data-src');
-                        imageObserver.unobserve(image);
-                    }
-                });
-            }, {
-                rootMargin: '50px 0px', // 提前50px开始加载
-                threshold: 0.1
-            });
-
-            lazyImages.forEach(image => {
-                imageObserver.observe(image);
-            });
 
             return container;
         }
@@ -687,44 +621,34 @@
                         (item.path.endsWith('.jpg') || item.path.endsWith('.jpeg') || item.path.endsWith('.png') || item.path.endsWith('.jfif'))
                     );
                     
+                    const originalImageFiles = imageFiles.filter(item => 
+                        !item.path.toLowerCase().includes('_compress')
+                    );
+                    
                     console.log(`文件夹 ${folder} 中的图片文件:`, imageFiles);
                     
-                    // 优化封面图片匹配逻辑，增加更多命名可能性
+                    // 优先使用原始封面图片，避免读取压缩版本
                     const coverKeywords = [
-                        '封面_compress', '封面', 
-                        'cover_compress', 'cover',
+                        '封面', 'cover',
                         'thumbnail', 'thumb', 'thumbnails',
                         'preview', 'pre',
                         'main', 'main_image',
-                        'thumbnail_compress', 'thumb_compress',
-                        'preview_compress', 'pre_compress',
-                        'main_compress', 'main_image_compress',
-                        '缩略图', '预览图', '主图',
-                        '缩略图_compress', '预览图_compress', '主图_compress'
+                        '缩略图', '预览图', '主图'
                     ];
                     const imageExtensions = ['.jpg', '.jpeg', '.png', '.jfif'];
                     
-                    // 第一步：优先选择任何包含_compress的图片
-                    let coverImage = imageFiles.find(item => {
+                    // 第一步：优先选择不包含_compress的封面相关图片
+                    let coverImage = originalImageFiles.find(item => {
                         const lowerPath = item.path.toLowerCase();
-                        return lowerPath.includes('_compress') &&
+                        return coverKeywords.some(keyword => 
+                                   lowerPath.includes(keyword.toLowerCase())
+                               ) &&
                                imageExtensions.some(ext => lowerPath.endsWith(ext));
                     });
                     
-                    // 第二步：如果没有压缩版，选择包含封面相关关键词的图片
-                    if (!coverImage) {
-                        coverImage = imageFiles.find(item => {
-                            const lowerPath = item.path.toLowerCase();
-                            return coverKeywords.some(keyword => 
-                                lowerPath.includes(keyword.toLowerCase())
-                            ) &&
-                            imageExtensions.some(ext => lowerPath.endsWith(ext));
-                        });
-                    }
-                    
-                    // 如果没有找到特定命名的封面图片，选择文件夹中的第一张图片
-                    if (!coverImage && imageFiles.length > 0) {
-                        coverImage = imageFiles[0];
+                    // 如果没有找到特定命名的原始封面图片，选择文件夹中的第一张原始图片
+                    if (!coverImage && originalImageFiles.length > 0) {
+                        coverImage = originalImageFiles[0];
                         console.log(`文件夹 ${folder} 中未找到特定命名的封面图片，使用第一张图片:`, coverImage.path);
                     }
                     
