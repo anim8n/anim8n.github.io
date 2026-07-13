@@ -230,12 +230,6 @@
             height: 20px;
         }
         
-        /* Graphical Design页面特有样式 */
-        .graphical-design-container {
-            margin: 20px 60px;
-            text-align: center;
-        }
-        
         /* 加载状态样式 */
         .loading {
             display: block;
@@ -253,80 +247,48 @@
             padding: 20px;
         }
         
-        /* 作品容器样式 */
+        /* 7张封面按照参考图排列，宽度随视口变化。 */
         .works-container {
-            margin: 20px 60px;
+            width: 100%;
         }
-        
-        /* Graphical Design作品展示网格布局 - 占满屏幕宽度，3列布局 */
+
         .graphical-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5vw;
-            padding: 1vw;
-            width: calc(100% - 2vw);
-            max-width: none;
-            margin: 0 auto;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(8px, 1.15vw, 18px);
+            width: min(90vw, 1340px);
+            margin: 40px auto 0;
+            align-items: start;
         }
         
         .grid-item {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
+            display: block;
+            min-width: 0;
+            color: inherit;
+            text-decoration: none;
         }
         
         .grid-item img {
             width: 100%;
-            height: 100%;
-            object-fit: fill;  /* 强制拉伸填满整个区域 */
+            height: auto;
+            display: block;
         }
         
-        .grid-item.placeholder::before {
-            content: attr(data-size);
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 0.8vw;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        .item-1 { grid-column: 1; grid-row: 1; }
+        .item-2 { grid-column: 2; grid-row: 1; }
+        .item-3 { grid-column: 3; grid-row: 1; }
+        .item-4 { grid-column: 1; grid-row: 2; }
+        .item-5 { grid-column: 2 / 4; grid-row: 2; }
+        .item-6 { grid-column: 1 / 3; grid-row: 3; }
+        .item-7 { grid-column: 3; grid-row: 3; }
+
+        @media (max-width: 700px) {
+            .graphical-grid {
+                gap: 6px;
+                width: calc(100vw - 24px);
+                margin-top: 24px;
+            }
         }
-        
-        /* 图片标题覆盖层 */
-        .grid-item.has-title {
-            justify-content: flex-start;
-        }
-        
-        .image-title-overlay {
-            position: absolute;
-            top: 0.4vw;
-            left: 0.4vw;
-            color: #fff;
-            font-size: 1.5vw;
-            font-weight: bold;
-            border-bottom: 2px solid #fff;
-            padding-bottom: 0.3vw;
-            z-index: 10;
-            background-color: transparent;
-            text-shadow: none;
-        }
-        
-        /* 网格布局定义 - 严格匹配新设计图（7张图）*/
-        /* 第一行 */
-        .item-1 { grid-column: 1; grid-row: 1; height: 15vw; }              /* 第1张图：第一行第一列，435×580，带标题 */
-        .item-2 { grid-column: 2; grid-row: 1; height: 15vw; }              /* 第2张图：第一行第二列，435×580 */
-        .item-3 { grid-column: 3; grid-row: 1; height: 15vw; }              /* 第3张图：第一行第三列，435×580 */
-        
-        /* 第二行 */
-        .item-4 { grid-column: 1; grid-row: 2; height: 15vw; }              /* 第4张图：第二行第一列，435×580 */
-        .item-5 { grid-column: 2; grid-column-end: 4; grid-row: 2; height: 15vw; } /* 第5张图：第二行第二/三列（跨2列），893×580 */
-        
-        /* 第三行 */
-        .item-6 { grid-column: 1; grid-column-end: 3; grid-row: 3; height: 15vw; } /* 第6张图：第三行第一/二列（跨2列），893×580 */
-        .item-7 { grid-column: 3; grid-row: 3; height: 15vw; }              /* 第7张图：第三行第三列，435×580 */
     </style>
     <!-- 引入Token Manager -->
     <script src="token-manager.js"></script>
@@ -410,117 +372,24 @@
             }
         }
 
-        // 创建Graphical Design网格布局
-        async function createGraphicalDesignGrid(works) {
-            const container = document.createElement('div');
-            container.style.cssText = `
-                display: flex;
-                flex-direction: column;
-                gap: 40px;
-                padding: 20px;
-            `;
-            
-            for (const work of works) {
-                const gridWrapper = document.createElement('div');
-                gridWrapper.className = 'graphical-grid';
-                
-                // 网格布局定义（根据新设计图）- 总共7个图片位置
-                // 网格配置: [网格项类名, 尺寸标注, 是否为第一张图(带标题)]
-                const gridConfig = [
-                    { className: 'item-1', size: '435 x 580', isFirst: true },   // 第1张图，第一行第一列，带标题
-                    { className: 'item-2', size: '435 x 580', isFirst: false }, // 第2张图，第一行第二列
-                    { className: 'item-3', size: '435 x 580', isFirst: false }, // 第3张图，第一行第三列
-                    { className: 'item-4', size: '435 x 580', isFirst: false }, // 第4张图，第二行第一列
-                    { className: 'item-5', size: '893 x 580', isFirst: false }, // 第5张图，第二行第二/三列（跨2列）
-                    { className: 'item-6', size: '893 x 580', isFirst: false }, // 第6张图，第三行第一/二列（跨2列）
-                    { className: 'item-7', size: '435 x 580', isFirst: false }, // 第7张图，第三行第三列
-                ];
-                
-                // 使用所有画廊图片（共7张）
-                const allImages = work.galleryImages.map(img => img.url);
-                
-                let imageIndex = 0;
-                
-                for (let i = 0; i < gridConfig.length; i++) {
-                    const config = gridConfig[i];
-                    const gridItem = document.createElement('div');
-                    gridItem.className = `grid-item ${config.className}`;
-                    
-                    // 图片区域
-                    const imgSrc = allImages[imageIndex] || null;
-                    
-                    if (imgSrc) {
-                        // 如果有图片，创建img元素
-                        const img = document.createElement('img');
-                        img.src = imgSrc;
-                        img.alt = `${work.title || 'Work'} - ${config.size}`;
-                        img.onload = () => {
-                            gridItem.classList.remove('placeholder');
-                        };
-                        img.onerror = () => {
-                            gridItem.classList.add('placeholder');
-                            gridItem.setAttribute('data-size', config.size);
-                        };
-                        gridItem.appendChild(img);
-                        
-                        // 如果是第一张图，添加标题覆盖层
-                        if (config.isFirst) {
-                            console.log('添加标题覆盖层:', work.title || '无标题');
-                            gridItem.classList.add('has-title');
-                            const titleOverlay = document.createElement('div');
-                            titleOverlay.className = 'image-title-overlay';
-                            titleOverlay.textContent = work.title || 'Untitled';
-                            // 添加点击跳转功能 - 使用 feature film 文件夹下的数据
-                            titleOverlay.style.cursor = 'pointer';
-                            titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?folder=${encodeURIComponent('feature film/' + work.title)}`;
-                            });
-                            gridItem.appendChild(titleOverlay);
-                        }
-                        
-                        imageIndex++;
-                    } else {
-                        // 没有图片时显示占位符
-                        gridItem.classList.add('placeholder');
-                        gridItem.setAttribute('data-size', config.size);
-                        
-                        // 如果是第一张图，添加标题覆盖层
-                        if (config.isFirst) {
-                            console.log('添加标题覆盖层:', work.title || '无标题');
-                            gridItem.classList.add('has-title');
-                            const titleOverlay = document.createElement('div');
-                            titleOverlay.className = 'image-title-overlay';
-                            titleOverlay.textContent = work.title || 'Untitled';
-                            // 添加点击跳转功能 - 使用 feature film 文件夹下的数据
-                            titleOverlay.style.cursor = 'pointer';
-                            titleOverlay.addEventListener('click', () => {
-                                window.location.href = `work-details.html?folder=${encodeURIComponent('feature film/' + work.title)}`;
-                            });
-                            gridItem.appendChild(titleOverlay);
-                        }
-                    }
-                    
-                    gridWrapper.appendChild(gridItem);
-                }
-                
-                container.appendChild(gridWrapper);
-            }
-            
-            return container;
-        }
+        function createGraphicalDesignGrid(covers) {
+            const grid = document.createElement('div');
+            grid.className = 'graphical-grid';
 
-        // 获取文本文件内容
-        async function fetchTextFile(url) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`获取文件失败: ${response.status} ${response.statusText}`);
-                }
-                return await response.text();
-            } catch (error) {
-                console.error('获取文本文件时出错:', error);
-                return '';
-            }
+            covers.forEach((cover, index) => {
+                const item = document.createElement('a');
+                item.className = `grid-item item-${index + 1}`;
+                item.href = `graphical_design-detail.html?folder=${encodeURIComponent(cover.folder)}`;
+
+                const image = document.createElement('img');
+                image.src = cover.url;
+                image.alt = `Graphical Design ${index + 1}`;
+                image.decoding = 'async';
+                item.appendChild(image);
+                grid.appendChild(item);
+            });
+
+            return grid;
         }
 
         // 在页面加载时自动获取仓库结构
@@ -539,66 +408,30 @@
                 
                 const repoData = await fetchRepoStructure(owner, repo, token);
                 
-                const graphicalDesignFolder = repoData.tree.find(item => item.path === 'graphical design' && item.type === 'tree');
-                if (!graphicalDesignFolder) {
-                    throw new Error('未找到graphical design文件夹');
-                }
-                
-                const graphicalDesignSubfolders = repoData.tree
-                    .filter(item => item.path.startsWith('graphical design/') && item.type === 'tree' && item.path !== 'graphical design')
-                    .map(item => item.path);
-                
-                console.log('找到的作品子文件夹:', graphicalDesignSubfolders);
-                
-                const works = [];
-                for (const folder of graphicalDesignSubfolders) {
-                    // 子文件夹名称就是作品标题
-                    const title = folder.split('/').pop();
-                    
-                    const work = {
-                        folder: folder,
-                        title: title,  // 文件夹名称即为标题
-                        description: '',
-                        galleryImages: []  // 所有图片（共11张）
-                    };
-                    
-                    // 查找子文件夹中的所有图片（png/jpg/jpeg格式）
-                    // 使用更精确的路径匹配，确保只匹配当前文件夹下的图片
-                    const imageFiles = repoData.tree.filter(item => {
+                const rootFolder = 'grphical_design';
+                const supportedExtensions = ['jpg', 'png', 'jpeg'];
+                const covers = Array.from({ length: 7 }, (_, index) => {
+                    const folder = `${rootFolder}/${index + 1}`;
+                    const coverFile = repoData.tree.find(item => {
                         if (item.type !== 'blob') return false;
-                        if (!item.path.endsWith('.jpg') && !item.path.endsWith('.jpeg') && !item.path.endsWith('.png')) return false;
-                        // 检查路径是否精确匹配当前文件夹（路径必须以 folder/ 开头，且后面没有额外的 /）
-                        const relativePath = item.path.slice(folder.length + 1);
-                        return item.path.startsWith(folder + '/') && !relativePath.includes('/');
+                        const normalizedPath = item.path.toLowerCase();
+                        return supportedExtensions.some(extension =>
+                            normalizedPath === `${folder}/cover.${extension}`.toLowerCase()
+                        );
                     });
-                    
-                    console.log(`文件夹 ${folder}/ 中的图片:`, imageFiles);
-                    
-                    // 将图片按数字排序（确保 img1→img2→...→img11 的顺序）
-                    const sortedImages = imageFiles.sort((a, b) => {
-                        const nameA = a.path.split('/').pop().toLowerCase();
-                        const nameB = b.path.split('/').pop().toLowerCase();
-                        // 提取文件名中的数字进行排序
-                        const numA = parseInt(nameA.match(/\d+/)) || 0;
-                        const numB = parseInt(nameB.match(/\d+/)) || 0;
-                        return numA - numB;
-                    });
-                    
-                    work.galleryImages = sortedImages.map(img => ({
-                        url: `https://raw.githubusercontent.com/${owner}/${repo}/main/${img.path}`,
-                        name: img.path.split('/').pop()
-                    }));
-                    
-                    console.log(`作品 ${title} 的图片列表:`, work.galleryImages);
-                    
-                    works.push(work);
-                }
-                
-                console.log('最终作品列表:', works);
-                
-                // 创建作品网格展示
-                const worksList = await createGraphicalDesignGrid(works);
-                worksContainer.appendChild(worksList);
+
+                    if (!coverFile) {
+                        throw new Error(`未找到 ${folder}/cover.jpg、cover.png 或 cover.jpeg`);
+                    }
+
+                    const encodedPath = coverFile.path.split('/').map(encodeURIComponent).join('/');
+                    return {
+                        folder,
+                        url: `https://raw.githubusercontent.com/${owner}/${repo}/main/${encodedPath}`
+                    };
+                });
+
+                worksContainer.appendChild(createGraphicalDesignGrid(covers));
                 
             } catch (error) {
                 console.error('获取作品列表时出错:', error);
