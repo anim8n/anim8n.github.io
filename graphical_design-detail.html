@@ -111,14 +111,13 @@
 
         .content {
             min-height: calc(100vh - 210px);
-            display: flex;
-            justify-content: center;
             box-sizing: border-box;
-            padding: 40px 60px 0;
+            padding: 40px 0 0;
         }
 
         .carousel {
             width: min(70vw, 760px);
+            margin: 0 auto;
         }
 
         .carousel-stage {
@@ -159,16 +158,8 @@
             -webkit-user-drag: none;
         }
 
-        .carousel-counter {
-            min-height: 18px;
-            margin-top: 12px;
-            color: #adadad;
-            font-size: 12px;
-            text-align: center;
-        }
-
         .work-info {
-            padding: 28px 0 0;
+            padding: 40px 60px 0;
         }
 
         #work-title {
@@ -203,11 +194,15 @@
 
         @media (max-width: 820px) {
             .content {
-                padding: 24px 12px 0;
+                padding-top: 24px;
             }
 
             .carousel {
                 width: min(92vw, 680px);
+            }
+
+            .work-info {
+                padding: 32px 24px 0;
             }
 
         }
@@ -292,12 +287,11 @@
                         <div id="carouselTrack" class="carousel-track"></div>
                     </div>
                 </div>
-                <div id="carouselCounter" class="carousel-counter" aria-live="polite"></div>
-                <div class="work-info">
-                    <h2 id="work-title"></h2>
-                    <p id="work-description"></p>
-                </div>
             </section>
+            <div id="workInfo" class="work-info" hidden>
+                <h2 id="work-title"></h2>
+                <p id="work-description"></p>
+            </div>
         </main>
     </div>
 
@@ -403,13 +397,13 @@
             const title = titleText || folder.split('/').pop();
             document.getElementById('work-title').textContent = title;
             document.getElementById('work-description').textContent = descriptionText;
+            document.getElementById('workInfo').hidden = false;
             document.title = `MOON - ${title}`;
         }
 
         function initializeCarousel(images) {
             const carousel = document.getElementById('carousel');
             const track = document.getElementById('carouselTrack');
-            const counter = document.getElementById('carouselCounter');
             let currentIndex = 0;
 
             function appendSlide(imageData, index, isClone = false) {
@@ -435,7 +429,6 @@
                     ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1)'
                     : 'none';
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
-                counter.textContent = `${(currentIndex % images.length) + 1} / ${images.length}`;
             }
 
             function advanceCarousel() {
