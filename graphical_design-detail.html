@@ -128,7 +128,7 @@
             width: 100%;
             aspect-ratio: 1;
             overflow: hidden;
-            background-color: #000;
+            background-color: #222222;
         }
 
         .carousel-track {
@@ -180,6 +180,79 @@
             white-space: pre-line;
         }
 
+        .more-section {
+            padding: 40px 0;
+        }
+
+        .more-title {
+            margin: 0 0 20px;
+            padding: 0 60px;
+            color: #a6a4ff;
+            font-size: 24px;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .more-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-color: #222222;
+            padding: 20px 0;
+        }
+
+        .more-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .more-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .more-image {
+            flex: 0 0 300px;
+            width: 300px;
+            height: 300px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .more-arrow {
+            position: absolute;
+            top: 50%;
+            z-index: 10;
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background-color: transparent;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            cursor: pointer;
+            transform: translateY(-50%);
+            transition: background-color 0.3s ease;
+        }
+
+        .more-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .more-arrow.previous {
+            left: 0;
+        }
+
+        .more-arrow.next {
+            right: 0;
+        }
+
         .loading,
         .error {
             margin: 0;
@@ -203,6 +276,16 @@
 
             .work-info {
                 padding: 32px 24px 0;
+            }
+
+            .more-title {
+                padding: 0 24px;
+            }
+
+            .more-image {
+                flex-basis: 240px;
+                width: 240px;
+                height: 240px;
             }
 
         }
@@ -292,6 +375,14 @@
                 <h2 id="work-title"></h2>
                 <p id="work-description"></p>
             </div>
+            <section id="moreSection" class="more-section" hidden>
+                <h3 class="more-title">More</h3>
+                <div class="more-container">
+                    <button id="morePreviousButton" class="more-arrow previous" type="button" aria-label="Previous images">&lt;</button>
+                    <div id="moreScroll" class="more-scroll"></div>
+                    <button id="moreNextButton" class="more-arrow next" type="button" aria-label="Next images">&gt;</button>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -452,6 +543,33 @@
             }
         }
 
+        function initializeMoreSection(images) {
+            const section = document.getElementById('moreSection');
+            const scrollContainer = document.getElementById('moreScroll');
+            const previousButton = document.getElementById('morePreviousButton');
+            const nextButton = document.getElementById('moreNextButton');
+
+            images.forEach(imageData => {
+                const image = document.createElement('img');
+                image.className = 'more-image';
+                image.src = imageData.url;
+                image.alt = imageData.name;
+                image.loading = 'lazy';
+                image.decoding = 'async';
+                scrollContainer.appendChild(image);
+            });
+
+            previousButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: -320, behavior: 'smooth' });
+            });
+
+            nextButton.addEventListener('click', () => {
+                scrollContainer.scrollBy({ left: 320, behavior: 'smooth' });
+            });
+
+            section.hidden = false;
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             const loading = document.getElementById('loading');
             const error = document.getElementById('error');
@@ -467,6 +585,7 @@
 
                 await loadWorkInfo(repoData, folder);
                 initializeCarousel(images);
+                initializeMoreSection(images);
             } catch (loadError) {
                 console.error('加载Graphical Design图片失败:', loadError);
                 error.textContent = loadError.message;
