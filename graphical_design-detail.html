@@ -167,6 +167,28 @@
             text-align: center;
         }
 
+        .work-info {
+            padding: 28px 0 0;
+        }
+
+        #work-title {
+            margin: 0 0 20px;
+            color: #a6a4ff;
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        #work-description {
+            margin: 0;
+            color: #818181;
+            font-size: 16px;
+            line-height: 1.6;
+            text-align: justify;
+            text-align-last: left;
+            white-space: pre-line;
+        }
+
         .loading,
         .error {
             margin: 0;
@@ -271,6 +293,10 @@
                     </div>
                 </div>
                 <div id="carouselCounter" class="carousel-counter" aria-live="polite"></div>
+                <div class="work-info">
+                    <h2 id="work-title"></h2>
+                    <p id="work-description"></p>
+                </div>
             </section>
         </main>
     </div>
@@ -326,7 +352,7 @@
         }
 
         function findMoreImages(repoData, folder) {
-            const moreFolder = `${folder}/more/`;
+            const moreFolder = `${folder}/More/`;
 
             return repoData.tree
                 .filter(item => {
@@ -346,6 +372,38 @@
                     name: item.path.slice(moreFolder.length),
                     url: `https://raw.githubusercontent.com/${owner}/${repo}/main/${item.path.split('/').map(encodeURIComponent).join('/')}`
                 }));
+        }
+
+        async function fetchTextFile(path) {
+            const encodedPath = path.split('/').map(encodeURIComponent).join('/');
+
+            try {
+                const response = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/main/${encodedPath}`);
+                if (!response.ok) {
+                    throw new Error(`获取文件失败: ${response.status} ${response.statusText}`);
+                }
+                return (await response.text()).trim();
+            } catch (error) {
+                console.error(`读取 ${path} 失败:`, error);
+                return '';
+            }
+        }
+
+        async function loadWorkInfo(repoData, folder) {
+            const titlePath = `${folder}/title.txt`;
+            const descriptionPath = `${folder}/description.txt`;
+            const titleFile = repoData.tree.find(item => item.type === 'blob' && item.path === titlePath);
+            const descriptionFile = repoData.tree.find(item => item.type === 'blob' && item.path === descriptionPath);
+
+            const [titleText, descriptionText] = await Promise.all([
+                titleFile ? fetchTextFile(titleFile.path) : Promise.resolve(''),
+                descriptionFile ? fetchTextFile(descriptionFile.path) : Promise.resolve('')
+            ]);
+
+            const title = titleText || folder.split('/').pop();
+            document.getElementById('work-title').textContent = title;
+            document.getElementById('work-description').textContent = descriptionText;
+            document.title = `MOON - ${title}`;
         }
 
         function initializeCarousel(images) {
@@ -411,9 +469,10 @@
                 const images = findMoreImages(repoData, folder);
 
                 if (images.length === 0) {
-                    throw new Error(`未找到 ${folder}/more 文件夹中的图片`);
+                    throw new Error(`未找到 ${folder}/More 文件夹中的图片`);
                 }
 
+                await loadWorkInfo(repoData, folder);
                 initializeCarousel(images);
             } catch (loadError) {
                 console.error('加载Graphical Design图片失败:', loadError);
