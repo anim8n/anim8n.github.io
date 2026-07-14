@@ -84,6 +84,20 @@
             height: 60px; /* 高度增加20px */
             font-family: "Source Han Sans SC", "思源黑体", "黑体", "SimHei", Arial, sans-serif;
         }
+
+        .site-logo-link {
+            display: flex;
+            align-items: center;
+            flex: 0 0 auto;
+            text-decoration: none;
+        }
+
+        .site-logo {
+            width: auto;
+            height: 200px;
+            margin-left: -60px;
+            cursor: pointer;
+        }
         
         .header * {
             font-family: inherit;
@@ -104,6 +118,7 @@
             padding: 8px 16px;
             border-radius: 4px;
             transition: color 0.3s ease, background-color 0.3s ease;
+            white-space: nowrap;
         }
         
         .nav-item:hover {
@@ -118,6 +133,7 @@
             border-radius: 4px;
             transition: color 0.3s ease, background-color 0.3s ease;
             color: #fff;
+            white-space: nowrap;
         }
         
         .project-item:hover {
@@ -141,6 +157,10 @@
         }
         
         .project-item:hover .project-dropdown {
+            display: block;
+        }
+
+        .project-item:focus-within .project-dropdown {
             display: block;
         }
         
@@ -216,6 +236,86 @@
             font-size: 16px;
             letter-spacing: 1px;
         }
+
+        .ad-cover-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin: 20px auto;
+            padding: 0 clamp(24px, 5vw, 60px);
+            box-sizing: border-box;
+        }
+
+        .ad-cover-image {
+            display: none;
+            width: min(100%, 1600px);
+            height: auto;
+        }
+
+        .ad-works-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(22px, 2.1vw, 30px);
+            width: min(100%, 1431px);
+            margin: 0 auto;
+            padding: 20px clamp(24px, 4.2vw, 60px);
+            box-sizing: border-box;
+        }
+
+        .ad-work-item {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            align-items: stretch;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        @media (hover: hover) {
+            .ad-work-item:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        .ad-work-image {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 417 / 240;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .ad-work-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .ad-work-text {
+            width: 100%;
+            min-width: 0;
+            line-height: 1.5;
+        }
+
+        .ad-work-title {
+            margin-bottom: 8px;
+            color: #a6a4ff;
+            font-size: 16px;
+            font-weight: 700;
+            overflow-wrap: anywhere;
+            cursor: pointer;
+        }
+
+        .ad-work-description {
+            color: #818181;
+            font-size: 14px;
+            text-align: left;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+        }
         
         /* 底部信息区域样式 */
         .footer {
@@ -261,6 +361,111 @@
             width: 20px;
             height: 20px;
         }
+
+        @media (max-width: 1100px) {
+            .ad-works-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .header {
+                margin-right: 24px;
+                margin-left: 24px;
+            }
+
+            .nav-container {
+                gap: 10px;
+                margin-right: 0;
+            }
+
+            .nav-item,
+            .project-item {
+                padding: 7px 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .header {
+                display: block;
+                height: auto;
+                min-height: 0;
+                margin: 8px 16px 18px;
+            }
+
+            .site-logo-link {
+                width: 120px;
+                height: 50px;
+                overflow: hidden;
+            }
+
+            .site-logo {
+                height: 160px;
+                margin-top: -45px;
+                margin-left: -40px;
+            }
+
+            .nav-container {
+                width: 100%;
+                gap: 4px;
+                justify-content: space-between;
+                margin: 4px 0 0;
+            }
+
+            .nav-item,
+            .project-item {
+                padding: 6px 4px;
+                font-size: 12px;
+            }
+
+            .project-dropdown {
+                left: 0;
+                min-width: 160px;
+                transform: none;
+            }
+
+            .ad-cover-container {
+                margin: 12px auto;
+                padding: 0 16px;
+            }
+
+            .ad-works-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 32px;
+                padding: 16px;
+            }
+
+            .loading,
+            .error {
+                margin: 24px 16px;
+            }
+
+            .footer {
+                padding: 30px 24px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+
+            .footer-left {
+                grid-template-columns: max-content minmax(0, 1fr);
+                width: 100%;
+            }
+
+            .footer-left span:nth-child(even) {
+                overflow-wrap: anywhere;
+            }
+
+            .footer-right {
+                gap: 20px;
+            }
+
+            .footer-right a {
+                margin-left: 0;
+            }
+        }
     </style>
     <!-- 引入Token Manager -->
     <script src="token-manager.js"></script>
@@ -268,12 +473,12 @@
 <body>
     <div class="container">
         <div class="header">
-            <a href="index.html" aria-label="HOME" style="display: flex; align-items: center; text-decoration: none;">
-                <img src="logo.png" alt="Logo" style="height: 200px; width: auto; margin-left: -60px; cursor: pointer;">
+            <a href="index.html" class="site-logo-link" aria-label="HOME">
+                <img src="logo.png" class="site-logo" alt="Logo">
             </a>
             <div class="nav-container">
                 <a href="index.html" class="nav-item">HOME</a>
-                <div class="project-item">
+                <div class="project-item" tabindex="0">
                     <span>PROJECTS</span>
                     <div class="project-dropdown">
                         <a href="feature_film.html" class="dropdown-item">FEATURE FILM</a>
@@ -292,8 +497,8 @@
         <span id="loading" class="loading" style="display: none;">LOADING...</span>
         <div id="error" class="error"></div>
         <!-- 封面图占位符 -->
-        <div id="coverImageContainer" style="display: flex; justify-content: center; margin: 20px 0;">
-            <img id="coverImage" src="" alt="AD封面" style="width: 90%; max-width: 100%; display: none;">
+        <div id="coverImageContainer" class="ad-cover-container">
+            <img id="coverImage" class="ad-cover-image" src="" alt="AD封面">
         </div>
         <!-- AD内容将在这里添加 -->
     </div>
@@ -388,50 +593,18 @@
         // 创建作品矩阵
         async function createWorksMatrix(works) {
             const container = document.createElement('div');
-            container.style.cssText = `
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 30px;
-                padding: 20px 60px;
-                max-width: 100%;
-                box-sizing: border-box;
-            `;
+            container.className = 'ad-works-grid';
 
             for (const work of works) {
                 const workItem = document.createElement('div');
-                workItem.style.cssText = `
-                    transition: transform 0.3s ease;
-                    cursor: pointer;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                `;
-                workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
-                workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
+                workItem.className = 'ad-work-item';
 
                 // 创建图片容器
                 const imageContainer = document.createElement('div');
-                // 设置图片容器宽高为用户要求的417px x 240px
-                imageContainer.style.cssText = `
-                    width: 417px;
-                    height: 240px;
-                    background-color: rgba(255, 255, 255, 0.1);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    overflow: hidden;
-                    margin-bottom: 15px;
-                    position: relative;
-                `;
+                imageContainer.className = 'ad-work-image';
 
                 // 创建图片元素
                 const image = document.createElement('img');
-                image.style.cssText = `
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    transition: opacity 0.3s ease;
-                `;
                 
                 // 添加调试信息，显示当前处理的作品
                 console.log('正在处理作品:', work.folder, '标题:', work.title, '图片URL:', work.coverCompressUrl);
@@ -485,23 +658,11 @@
 
                 // 创建标题和描述容器，与图片宽度一致
                 const textContainer = document.createElement('div');
-                textContainer.style.cssText = `
-                    width: 417px;
-                    line-height: 1.5;
-                `;
+                textContainer.className = 'ad-work-text';
 
                 const title = document.createElement('div');
                 title.textContent = work.title;
-                title.style.cssText = `
-                    font-size: 16px;
-                    font-weight: bold;
-                    margin-bottom: 8px;
-                    color: #a6a4ff;
-                    text-align: left;
-                    word-wrap: break-word;
-                    white-space: normal;
-                    cursor: pointer;
-                `;
+                title.className = 'ad-work-title';
                 
                 // 添加点击事件，跳转到作品详情页
                 title.addEventListener('click', () => {
@@ -511,15 +672,8 @@
                 });
 
                 const description = document.createElement('div');
-                description.innerHTML = work.description.replace(/\n/g, '<br>');
-                description.style.cssText = `
-                    font-size: 14px;
-                    color: #818181;
-                    text-align: left;
-                    word-wrap: break-word;
-                    white-space: normal;
-                    text-indent: 0;
-                `;
+                description.textContent = work.description;
+                description.className = 'ad-work-description';
 
                 textContainer.appendChild(title);
                 textContainer.appendChild(description);
