@@ -244,10 +244,55 @@
             text-align: center;
         }
 
+        .feature-works-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(24px, 3vw, 30px);
+            padding: 20px clamp(16px, 4vw, 60px);
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .feature-work-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-work-media > img {
+            display: block !important;
+            width: 100% !important;
+            height: 100% !important;
+            min-width: 100%;
+            min-height: 100%;
+            max-width: none;
+            max-height: none;
+            object-fit: cover !important;
+            object-position: center center;
+        }
+
+        .feature-work-media {
+            height: min(33.0938vw, 484.3px) !important;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
             .feature-work-media,
             .feature-work-text {
                 width: 100% !important;
+            }
+
+            .feature-work-media {
+                height: calc(40.3583vw - 25.829px) !important;
+            }
+
+            .feature-work-item {
+                padding: 16px;
             }
         }
     </style>
@@ -375,31 +420,11 @@
         // 创建作品列表（一行一个作品）
         async function createWorksList(works) {
             const container = document.createElement('div');
-            container.style.cssText = `
-                display: flex;
-                flex-direction: column;
-                gap: 30px;
-                padding: 20px 60px;
-                max-width: 100%;
-                box-sizing: border-box;
-            `;
+            container.className = 'feature-works-list';
 
             for (const work of works) {
                 const workItem = document.createElement('div');
-                workItem.style.cssText = `
-                    display: flex;
-                    flex-direction: column;
-                    gap: 18px;
-                    align-items: center;
-                    transition: transform 0.3s ease;
-                    cursor: pointer;
-                    padding: 20px;
-                    background-color: rgba(255, 255, 255, 0.05);
-                    width: 100%;
-                    box-sizing: border-box;
-                `;
-                workItem.onmouseover = () => workItem.style.transform = 'translateY(-5px)';
-                workItem.onmouseout = () => workItem.style.transform = 'translateY(0)';
+                workItem.className = 'feature-work-item';
 
                 // 创建图片容器 - 使用焦点剪裁
                 const imageContainer = document.createElement('div');
@@ -423,6 +448,10 @@
                 image.style.cssText = `
                     width: 100%;
                     height: 100%;
+                    min-width: 100%;
+                    min-height: 100%;
+                    max-width: none;
+                    max-height: none;
                     object-fit: cover;
                     object-position: center center;
                     display: block;
